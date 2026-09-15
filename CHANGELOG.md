@@ -124,8 +124,11 @@ Added intuitive reordering controls across every multi-entry section of the site
 - **Two-Layer Authority & Access Protection**:
   - **Layer 1 (Admin Passcode Gate)**: Unlocked by default passcode (`chipman2024`, configurable), preventing casual visitors from viewing or interacting with the CMS editor.
   - **Layer 2 (Cryptographic GitHub Token Verification)**: Live server-side authority check via `checkGitHubAuthority()`. Checks whether the token possesses active `push` (write) permissions on the repository before any commit can take place. Denies and blocks unauthorized publication attempts.
-- **GitHub Sync Configuration Modal**:
-  - Added `#github-modal` allowing users to configure owner, repository, branch, and personal access token with live connection testing and authority feedback badges.
+- **GitHub Sync Configuration (PAT Only)**:
+  - Streamlined the setup to require **only the Personal Access Token (PAT)**. The repository owner (`IdanSheizaf`), repository (`chipman-lab`), and branch (`main`) are pre-configured constants, eliminating unnecessary configuration steps for both the user and the PI.
+- **Enforced Passcode Gate by Default**:
+  - The admin authentication gate is now rendered visible by default with an instant session check, ensuring `admin.html` is strictly locked until `chipman2024` is entered.
+
 
 
 
