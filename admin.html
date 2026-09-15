@@ -618,9 +618,7 @@
           Unlock Admin Panel
         </button>
       </form>
-      <div class="pt-2 border-t border-slate-100 text-[11px] text-slate-400">
-        Default passcode: <code class="font-mono font-bold text-slate-600">chipman2024</code> • Changeable in settings
-      </div>
+      
     </div>
   </div>
   <script>
@@ -862,7 +860,6 @@
       }
     });
 
-
     // Load from localStorage if a previous unsaved draft exists
     try {
       const draft = localStorage.getItem('chipman_lab_draft');
@@ -871,7 +868,14 @@
       }
     } catch (e) {}
 
-    // Automatically convert any legacy image paths to organized subdirectories
+    // Clean up any deleted 'future-projects' tab from old browser drafts
+    if (siteData.customSections) {
+      siteData.customSections = siteData.customSections.filter(s => s.id !== 'future-projects');
+    }
+    if (siteData.navigation) {
+      siteData.navigation = siteData.navigation.filter(n => n.id !== 'future-projects');
+    }
+
     autoMigrateImagePaths(siteData);
     window.LAB_DATA = siteData;
 
@@ -883,7 +887,6 @@
     }
     persistDraft();
 
-    // Image File Picker Helper: Converts chosen local file to data URL and updates preview
     function handleImageFileSelect(event, targetInputId, previewImgId) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
