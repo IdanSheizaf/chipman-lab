@@ -46,7 +46,7 @@
   </style>
 
   <!-- Load current site data -->
-  <script src="./data.js?v=5"></script>
+  <script src="./data.js?v=6"></script>
 </head>
 <body class="min-h-screen bg-slate-900 flex flex-col p-3 sm:p-6 lg:p-8">
 
@@ -101,7 +101,7 @@
       <button onclick="switchAdminSubTab('gallery')" id="admin-tab-gallery" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Gallery Photos</button>
       <button onclick="switchAdminSubTab('news')" id="admin-tab-news" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">What's Happening</button>
       <button onclick="switchAdminSubTab('banners')" id="admin-tab-banners" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Hero Banners & Logos</button>
-      <button onclick="switchAdminSubTab('general')" id="admin-tab-general" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Lab Info & Contact</button>
+      <button onclick="switchAdminSubTab('general')" id="admin-tab-general" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Lab Info & Settings</button>
       <button onclick="switchAdminSubTab('sections')" id="admin-tab-sections" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap flex items-center gap-1.5">
         <i data-lucide="menu" class="w-4 h-4"></i>
         <span>Navigation & Sections</span>
@@ -507,6 +507,49 @@
               Apply Contact & Info Changes
             </button>
           </div>
+
+          <!-- Admin Security & Passcode Card -->
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-orange-100 text-chipman-orange flex items-center justify-center">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 text-base">Admin Security & Passcode</h4>
+                <p class="text-xs text-slate-500">Update the passcode required to unlock this CMS editor</p>
+              </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 flex items-start gap-2">
+              <i data-lucide="lock" class="w-4 h-4 text-amber-700 shrink-0 mt-0.5"></i>
+              <div class="leading-relaxed">
+                <strong>Cryptographic Protection:</strong> Passcodes are salted and encrypted with <strong>SHA-256</strong> before saving. The plaintext passcode is never exposed in the HTML source code or public GitHub repository.
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-bold text-slate-600">New Admin Passcode</label>
+                  <button type="button" onclick="togglePasscodeInputsVisibility()" class="text-[11px] text-chipman-orange hover:underline font-medium">Show / Hide</button>
+                </div>
+                <input type="password" id="admin-new-passcode" placeholder="Enter new passcode (min 6 chars)" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-chipman-orange focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Confirm New Passcode</label>
+                <input type="password" id="admin-confirm-passcode" placeholder="Re-enter new passcode" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-chipman-orange focus:outline-none">
+              </div>
+            </div>
+
+            <div id="admin-passcode-status" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+
+            <div class="pt-1">
+              <button type="button" onclick="updateAdminPasscode()" class="px-5 py-2.5 bg-chipman-orange text-white rounded-xl text-xs font-bold hover:bg-chipman-darkorange transition shadow-sm flex items-center gap-2">
+                <i data-lucide="key" class="w-4 h-4"></i>
+                <span>Save New Passcode</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- ============ PANEL: NAVIGATION & SECTIONS ============ -->
@@ -865,6 +908,9 @@
       const draft = localStorage.getItem('chipman_lab_draft');
       if (draft) {
         siteData = JSON.parse(draft);
+      }
+      if (!siteData.adminPasscodeHash && window.LAB_DATA && window.LAB_DATA.adminPasscodeHash) {
+        siteData.adminPasscodeHash = window.LAB_DATA.adminPasscodeHash;
       }
     } catch (e) {}
 
@@ -2812,11 +2858,21 @@
 
     // Initialize on load
     
-    // ================= ADMIN PASSCODE AUTHENTICATION GATE =================
-    const DEFAULT_PASSCODE = 'chipman2024';
+    // ================= ADMIN PASSCODE AUTHENTICATION GATE (SHA-256 ENCRYPTED) =================
+    const PASSCODE_SALT = 'chipman_evo_devo_lab_salt_2026';
+    const DEFAULT_PASSCODE_HASH = 'a32d58d7e7f80ee0ec8b04a8361afd078f5436289975eed5c6530212bba5d8a0';
 
-    function getAdminPasscode() {
-      return localStorage.getItem('chipman_admin_passcode') || DEFAULT_PASSCODE;
+    async function computePasscodeHash(passcode) {
+      const msgBuffer = new TextEncoder().encode(PASSCODE_SALT + passcode);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getExpectedPasscodeHash() {
+      return (window.LAB_DATA && window.LAB_DATA.adminPasscodeHash) ||
+             (typeof siteData !== 'undefined' && siteData.adminPasscodeHash) ||
+             localStorage.getItem('chipman_admin_passcode_hash') ||
+             DEFAULT_PASSCODE_HASH;
     }
 
     function checkAdminAuth() {
@@ -2827,19 +2883,89 @@
       }
     }
 
-    function handleAuthSubmit(e) {
+    async function handleAuthSubmit(e) {
       e.preventDefault();
       const entered = document.getElementById('admin-auth-passcode').value.trim();
-      const expected = getAdminPasscode();
       const errEl = document.getElementById('admin-auth-error');
 
-      if (entered === expected) {
-        sessionStorage.setItem('chipman_admin_authed', 'true');
-        const gate = document.getElementById('admin-auth-gate');
-        if (gate) gate.style.display = 'none';
-        if (errEl) errEl.classList.add('hidden');
-      } else {
-        if (errEl) errEl.classList.remove('hidden');
+      try {
+        const enteredHash = await computePasscodeHash(entered);
+        const expectedHash = getExpectedPasscodeHash();
+
+        if (enteredHash === expectedHash) {
+          sessionStorage.setItem('chipman_admin_authed', 'true');
+          const gate = document.getElementById('admin-auth-gate');
+          if (gate) gate.style.display = 'none';
+          if (errEl) errEl.classList.add('hidden');
+        } else {
+          if (errEl) {
+            errEl.textContent = 'Incorrect passcode. Please try again.';
+            errEl.classList.remove('hidden');
+          }
+        }
+      } catch (err) {
+        console.error('Passcode verification error:', err);
+        if (errEl) {
+          errEl.textContent = 'Error computing passcode hash: ' + err.message;
+          errEl.classList.remove('hidden');
+        }
+      }
+    }
+
+    function togglePasscodeInputsVisibility() {
+      const p1 = document.getElementById('admin-new-passcode');
+      const p2 = document.getElementById('admin-confirm-passcode');
+      if (!p1 || !p2) return;
+      const isPass = p1.type === 'password';
+      p1.type = isPass ? 'text' : 'password';
+      p2.type = isPass ? 'text' : 'password';
+    }
+
+    async function updateAdminPasscode() {
+      const p1 = document.getElementById('admin-new-passcode').value;
+      const p2 = document.getElementById('admin-confirm-passcode').value;
+      const statusEl = document.getElementById('admin-passcode-status');
+
+      if (!p1 || p1.length < 6) {
+        statusEl.className = 'p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-200 block';
+        statusEl.textContent = 'Passcode must be at least 6 characters long.';
+        statusEl.classList.remove('hidden');
+        return;
+      }
+      if (p1 !== p2) {
+        statusEl.className = 'p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-200 block';
+        statusEl.textContent = 'Passcodes do not match. Please verify and re-type.';
+        statusEl.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const newHash = await computePasscodeHash(p1);
+        siteData.adminPasscodeHash = newHash;
+        if (window.LAB_DATA) window.LAB_DATA.adminPasscodeHash = newHash;
+        localStorage.setItem('chipman_admin_passcode_hash', newHash);
+        renderAll();
+
+        document.getElementById('admin-new-passcode').value = '';
+        document.getElementById('admin-confirm-passcode').value = '';
+
+        statusEl.className = 'p-3.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 block space-y-1';
+        statusEl.innerHTML = `
+          <div class="flex items-center gap-1.5 font-bold text-emerald-900">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+            <span>New passcode saved and securely encrypted with SHA-256!</span>
+          </div>
+          <p class="text-[11px] text-emerald-700">
+            Be sure to click <strong>"Publish to GitHub"</strong> in the top header to deploy your new passcode to the live site.
+          </p>
+        `;
+        statusEl.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      } catch (err) {
+        console.error('Error updating passcode:', err);
+        statusEl.className = 'p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-200 block';
+        statusEl.textContent = 'Error computing passcode hash: ' + err.message;
+        statusEl.classList.remove('hidden');
       }
     }
 

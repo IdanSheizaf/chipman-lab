@@ -1,5 +1,6 @@
 // Updated data file generated from the Chipman Lab Admin UI
 window.LAB_DATA = {
+  "adminPasscodeHash": "a32d58d7e7f80ee0ec8b04a8361afd078f5436289975eed5c6530212bba5d8a0",
   "labInfo": {
     "labName": "The EVO-DEVO Lab",
     "labSubtitle": "For Arthropod Evolution & Development",
