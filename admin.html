@@ -597,10 +597,10 @@
   </div>
 
 <!-- ================= ADMIN AUTHENTICATION GATE ================= -->
-  <div id="admin-auth-gate" class="hidden fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
+  <div id="admin-auth-gate" class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-slate-200 space-y-6 text-center">
       <div class="w-16 h-16 rounded-2xl bg-orange-100 text-chipman-orange flex items-center justify-center mx-auto shadow-inner">
-        <i data-lucide="shield-check" class="w-8 h-8"></i>
+        <i data-lucide="lock" class="w-8 h-8"></i>
       </div>
       <div class="space-y-1.5">
         <h3 class="text-2xl font-bold text-slate-900">Evo-Devo Lab CMS</h3>
@@ -623,18 +623,26 @@
       </div>
     </div>
   </div>
+  <script>
+    (function() {
+      if (sessionStorage.getItem('chipman_admin_authed') === 'true') {
+        var gate = document.getElementById('admin-auth-gate');
+        if (gate) gate.style.display = 'none';
+      }
+    })();
+  </script>
 
   <!-- ================= GITHUB SYNC & AUTHORITY MODAL ================= -->
   <div id="github-modal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 border border-slate-200 my-4 max-h-[92vh] flex flex-col" onclick="event.stopPropagation()">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-5 border border-slate-200 my-4 max-h-[92vh] flex flex-col" onclick="event.stopPropagation()">
       <div class="flex items-center justify-between border-b border-slate-100 pb-4 shrink-0">
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center">
             <i data-lucide="github" class="w-5 h-5"></i>
           </div>
           <div>
-            <h4 class="font-bold text-slate-900 text-base">GitHub Sync & Authority</h4>
-            <p class="text-xs text-slate-500">1-Click Live Publishing Setup</p>
+            <h4 class="font-bold text-slate-900 text-base">GitHub Publishing Authority</h4>
+            <p class="text-xs text-emerald-600 font-mono font-medium">IdanSheizaf / chipman-lab</p>
           </div>
         </div>
         <button onclick="closeGitHubModal()" class="p-1 text-slate-400 hover:text-slate-600">
@@ -644,32 +652,16 @@
 
       <div class="space-y-4 overflow-y-auto flex-1 pr-1 text-xs text-slate-600">
         <p class="leading-relaxed">
-          Connecting to your GitHub repository allows you and your PI to publish updates to the live website instantly without touching Git commands.
+          Enter your GitHub Personal Access Token (PAT). This grants your browser permission to publish live updates directly to <strong>IdanSheizaf/chipman-lab</strong>.
         </p>
 
-        <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">GitHub Username / Organization</label>
-            <input id="gh-owner" type="text" placeholder="e.g. YOUR_USERNAME" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-chipman-orange focus:outline-none">
+        <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div class="flex items-center justify-between mb-1">
+            <label class="font-bold text-slate-700">Personal Access Token (PAT)</label>
+            <button type="button" onclick="toggleTokenVisibility()" class="text-[11px] text-chipman-orange hover:underline font-medium">Show / Hide</button>
           </div>
-
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Repository Name</label>
-            <input id="gh-repo" type="text" placeholder="e.g. chipman-lab" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-chipman-orange focus:outline-none">
-          </div>
-
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Target Branch</label>
-            <input id="gh-branch" type="text" value="main" placeholder="main" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-chipman-orange focus:outline-none">
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="font-bold text-slate-700">Personal Access Token (PAT)</label>
-              <button type="button" onclick="toggleTokenVisibility()" class="text-[11px] text-chipman-orange hover:underline font-medium">Show / Hide</button>
-            </div>
-            <input id="gh-token" type="password" placeholder="ghp_... or github_pat_..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg font-mono text-xs focus:ring-2 focus:ring-chipman-orange focus:outline-none">
-          </div>
+          <input id="gh-token" type="password" placeholder="github_pat_... or ghp_..." class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl font-mono text-xs focus:ring-2 focus:ring-chipman-orange focus:outline-none">
+          <p class="text-[11px] text-slate-400 pt-1">Saved securely in your browser's private local storage.</p>
         </div>
 
         <!-- Verification status feedback alert -->
@@ -678,19 +670,19 @@
         <div class="bg-blue-50/80 p-3.5 rounded-2xl border border-blue-200 space-y-1.5 text-[11px] text-blue-900 leading-relaxed">
           <p class="font-bold flex items-center gap-1.5">
             <i data-lucide="info" class="w-3.5 h-3.5 text-blue-600"></i>
-            <span>How to generate your token (1-minute guide):</span>
+            <span>How to get your token (1-minute guide):</span>
           </p>
           <ol class="list-decimal list-inside space-y-1 pl-1 text-blue-800">
             <li>On GitHub: <strong>Settings</strong> → <strong>Developer Settings</strong> → <strong>Personal access tokens</strong> → <strong>Fine-grained tokens</strong>.</li>
-            <li>Click <strong>Generate new token</strong> → Select your lab repo.</li>
-            <li>Under <strong>Permissions</strong> → <strong>Repository permissions</strong> → Set <strong>Contents</strong> to <strong>Read and write</strong>.</li>
+            <li>Click <strong>Generate new token</strong> → Select <strong>chipman-lab</strong> repository.</li>
+            <li>Under <strong>Permissions</strong> → Set <strong>Contents</strong> to <strong>Read and write</strong>.</li>
             <li>Copy the token and paste it above.</li>
           </ol>
         </div>
       </div>
 
       <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 shrink-0">
-        <button onclick="clearGitHubConfig()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Disconnect</button>
+        <button onclick="clearGitHubConfig()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Clear Token</button>
         <div class="flex items-center gap-2">
           <button onclick="closeGitHubModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg">Cancel</button>
           <button id="gh-verify-btn" onclick="saveAndVerifyGitHubConfig()" class="px-5 py-2 text-xs font-bold text-white bg-chipman-orange hover:bg-chipman-darkorange rounded-lg shadow-sm transition flex items-center gap-1.5">
@@ -2827,70 +2819,62 @@
     function checkAdminAuth() {
       const isAuthed = sessionStorage.getItem('chipman_admin_authed') === 'true';
       const gate = document.getElementById('admin-auth-gate');
-      if (!isAuthed) {
-        if (gate) gate.classList.remove('hidden');
-      } else {
-        if (gate) gate.classList.add('hidden');
+      if (gate) {
+        gate.style.display = isAuthed ? 'none' : 'flex';
       }
     }
 
     function handleAuthSubmit(e) {
       e.preventDefault();
-      const entered = document.getElementById('admin-auth-passcode').value;
+      const entered = document.getElementById('admin-auth-passcode').value.trim();
       const expected = getAdminPasscode();
       const errEl = document.getElementById('admin-auth-error');
 
       if (entered === expected) {
         sessionStorage.setItem('chipman_admin_authed', 'true');
         const gate = document.getElementById('admin-auth-gate');
-        if (gate) gate.classList.add('hidden');
+        if (gate) gate.style.display = 'none';
         if (errEl) errEl.classList.add('hidden');
       } else {
         if (errEl) errEl.classList.remove('hidden');
       }
     }
 
-    // ================= GITHUB SYNC & AUTHORITY LOGIC =================
-    function getGitHubConfig() {
-      try {
-        const raw = localStorage.getItem('chipman_github_config');
-        return raw ? JSON.parse(raw) : null;
-      } catch (e) {
-        return null;
-      }
+    // ================= GITHUB SYNC & AUTHORITY LOGIC (PAT ONLY) =================
+    const GH_OWNER = 'IdanSheizaf';
+    const GH_REPO = 'chipman-lab';
+    const GH_BRANCH = 'main';
+
+    function getGitHubToken() {
+      return localStorage.getItem('chipman_github_token') || '';
+    }
+
+    function setGitHubToken(tok) {
+      localStorage.setItem('chipman_github_token', tok.trim());
     }
 
     function updateGitHubBadge() {
-      const cfg = getGitHubConfig();
+      const token = getGitHubToken();
       const badgeText = document.getElementById('admin-github-badge-text');
       const badgeDot = document.getElementById('admin-github-badge-dot');
 
-      if (cfg && cfg.owner && cfg.repo && cfg.token) {
-        if (badgeDot) {
-          badgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
-        }
+      if (token) {
+        if (badgeDot) badgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
         if (badgeText) {
-          badgeText.innerText = `GitHub: ${cfg.repo}`;
+          badgeText.innerText = 'GitHub: Ready';
           badgeText.className = 'text-[11px] font-semibold text-emerald-300';
         }
       } else {
-        if (badgeDot) {
-          badgeDot.className = 'w-2 h-2 rounded-full bg-amber-400';
-        }
+        if (badgeDot) badgeDot.className = 'w-2 h-2 rounded-full bg-amber-400';
         if (badgeText) {
-          badgeText.innerText = 'GitHub: Setup';
+          badgeText.innerText = 'GitHub: Set PAT';
           badgeText.className = 'text-[11px] font-medium text-slate-300';
         }
       }
     }
 
     function openGitHubModal() {
-      const cfg = getGitHubConfig() || {};
-      document.getElementById('gh-owner').value = cfg.owner || '';
-      document.getElementById('gh-repo').value = cfg.repo || '';
-      document.getElementById('gh-branch').value = cfg.branch || 'main';
-      document.getElementById('gh-token').value = cfg.token || '';
-
+      document.getElementById('gh-token').value = getGitHubToken();
       const statusEl = document.getElementById('gh-auth-status');
       if (statusEl) statusEl.classList.add('hidden');
 
@@ -2938,17 +2922,13 @@
     }
 
     async function saveAndVerifyGitHubConfig() {
-      const owner = document.getElementById('gh-owner').value.trim();
-      const repo = document.getElementById('gh-repo').value.trim();
-      const branch = document.getElementById('gh-branch').value.trim() || 'main';
       const token = document.getElementById('gh-token').value.trim();
-
       const statusEl = document.getElementById('gh-auth-status');
       const verifyBtn = document.getElementById('gh-verify-btn');
 
-      if (!owner || !repo || !token) {
+      if (!token) {
         statusEl.className = 'p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-200';
-        statusEl.innerText = 'Please fill in Owner, Repository Name, and Token.';
+        statusEl.innerText = 'Please enter your GitHub Personal Access Token.';
         statusEl.classList.remove('hidden');
         return;
       }
@@ -2957,9 +2937,9 @@
       verifyBtn.innerText = 'Verifying Authority...';
 
       try {
-        const check = await checkGitHubAuthority(owner, repo, token);
+        const check = await checkGitHubAuthority(GH_OWNER, GH_REPO, token);
         if (check.ok) {
-          localStorage.setItem('chipman_github_config', JSON.stringify({ owner, repo, branch, token }));
+          setGitHubToken(token);
           statusEl.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
           statusEl.innerHTML = `✓ <strong>Authorized!</strong> Connected to <code>${check.full_name}</code>. You have write authority to publish.`;
           statusEl.classList.remove('hidden');
@@ -2983,8 +2963,8 @@
     }
 
     function clearGitHubConfig() {
-      if (confirm('Disconnect GitHub configuration?')) {
-        localStorage.removeItem('chipman_github_config');
+      if (confirm('Clear saved GitHub Personal Access Token from this browser?')) {
+        localStorage.removeItem('chipman_github_token');
         updateGitHubBadge();
         closeGitHubModal();
       }
@@ -3002,9 +2982,8 @@
 
     // ================= PUBLISH DIRECTLY TO GITHUB =================
     async function publishToGitHub() {
-      const cfg = getGitHubConfig();
-      if (!cfg || !cfg.owner || !cfg.repo || !cfg.token) {
-        alert('Please configure your GitHub repository and Personal Access Token first.');
+      const token = getGitHubToken();
+      if (!token) {
         openGitHubModal();
         return;
       }
@@ -3018,8 +2997,9 @@
       showSaveProgress('Verifying publishing authority with GitHub...');
 
       try {
-        const authCheck = await checkGitHubAuthority(cfg.owner, cfg.repo, cfg.token);
+        const authCheck = await checkGitHubAuthority(GH_OWNER, GH_REPO, token);
         if (!authCheck.ok) {
+          openGitHubModal();
           throw new Error('Authority check failed: ' + authCheck.message);
         }
 
@@ -3027,10 +3007,10 @@
         showSaveProgress('Fetching current data.js SHA from GitHub...');
 
         // 2. Fetch current data.js SHA on GitHub
-        const getUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.js?ref=${cfg.branch}`;
+        const getUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/data.js?ref=${GH_BRANCH}`;
         const getRes = await fetch(getUrl, {
           headers: {
-            'Authorization': `Bearer ${cfg.token}`,
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/vnd.github.v3+json'
           }
         });
@@ -3052,21 +3032,21 @@
         const contentBase64 = utf8ToBase64(fileContent);
 
         if (publishText) publishText.innerText = 'Pushing commit...';
-        showSaveProgress('Pushing commit to ' + cfg.repo + ' (' + cfg.branch + ')...');
+        showSaveProgress('Pushing commit to ' + GH_REPO + ' (' + GH_BRANCH + ')...');
 
         // 4. PUT commit to GitHub API
-        const putUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.js`;
+        const putUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/data.js`;
         const putBody = {
           message: `Update lab website data via CMS (${new Date().toLocaleString()})`,
           content: contentBase64,
-          branch: cfg.branch
+          branch: GH_BRANCH
         };
         if (currentSha) putBody.sha = currentSha;
 
         const putRes = await fetch(putUrl, {
           method: 'PUT',
           headers: {
-            'Authorization': `Bearer ${cfg.token}`,
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/vnd.github.v3+json',
             'Content-Type': 'application/json'
           },
@@ -3083,12 +3063,12 @@
 
         hideSaveProgress('Published Successfully!');
         if (publishText) publishText.innerText = 'Published!';
-        alert(`🎉 Published Successfully to GitHub!\n\n• Commit pushed to: ${cfg.owner}/${cfg.repo} (${cfg.branch} branch)\n• GitHub Pages will deploy your updates live in ~30–60 seconds.\n\nYour website is updating!`);
+        alert(`🎉 Published Successfully to GitHub!\n\n• Commit pushed to: ${GH_OWNER}/${GH_REPO} (${GH_BRANCH} branch)\n• GitHub Pages will deploy your updates live in ~30–60 seconds.\n\nYour website is updating!`);
 
       } catch (err) {
         console.error('Publish error:', err);
         hideSaveProgress('Publish Failed');
-        alert('❌ Publish Failed:\n\n' + err.message + '\n\nPlease verify your token and repo settings under the GitHub button.');
+        alert('❌ Publish Failed:\n\n' + err.message + '\n\nPlease verify your token under the GitHub button.');
       } finally {
         if (publishBtn) publishBtn.disabled = false;
         if (publishText) publishText.innerText = 'Publish to GitHub';
@@ -3096,6 +3076,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
+      checkAdminAuth();
+      updateGitHubBadge();
       populateAdminViews();
       renderArchiveList();
 
