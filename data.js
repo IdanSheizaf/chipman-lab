@@ -483,29 +483,7 @@ window.LAB_DATA = {
       "label": "Contact",
       "enabled": true,
       "isCustom": false
-    },
-    {
-      "id": "future-projects",
-      "label": "future projects",
-      "enabled": true,
-      "isCustom": true
     }
   ],
-  "customSections": [
-    {
-      "id": "future-projects",
-      "title": "future projects",
-      "subtitle": "",
-      "banner": "./images/banners/home_banner.jpg",
-      "intro": "",
-      "blocks": [
-        {
-          "title": "General Information",
-          "content": "Add detailed information, guidelines, or descriptions for this section.",
-          "linkLabel": "",
-          "linkUrl": ""
-        }
-      ]
-    }
-  ]
+  "customSections": []
 };
