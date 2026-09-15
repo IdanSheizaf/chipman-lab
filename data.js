@@ -31,7 +31,7 @@ window.LAB_DATA = {
       "contact": "./images/banners/contact_banner.jpg"
     },
     "links": {
-      "googleScholar": "https://scholar.google.com/citations?user=X6oI-20AAAAJ",
+      "googleScholar": "https://scholar.google.com/citations?user=GOMspxsAAAAJ&hl=iw&oi=ao",
       "orcid": "https://orcid.org/0000-0002-3904-8971",
       "researchGate": "https://www.researchgate.net/profile/Ariel-Chipman",
       "departmentUrl": "https://en.lifesciences.huji.ac.il/people/ariel-chipman"
@@ -153,7 +153,7 @@ window.LAB_DATA = {
       "bio": "My scientific interests lie first and foremost in the field of evolutionary biology, specifically animal evolution. I ask questions about the origin and evolution of central features of animal morphology and body plans and about how these are modified to generate diversity. My scientific philosophy is that any subject should be studied using all available data sources, and this is especially true for studying evolution. To paraphrase Dobzhansky's famous maxim: \"Everything in biology provides evidence for evolution\". For me \"interdisciplinarity\" is not just a buzzword but a definition of the way I think about evolution. Thus, my aim is to adopt a total-evidence approach to studying animal evolution, with my focus being on the evolution of the arthropod body plan.",
       "email": "Ariel.Chipman@mail.huji.ac.il",
       "socials": {
-        "scholar": "https://scholar.google.com/citations?user=X6oI-20AAAAJ",
+        "scholar": "https://scholar.google.com/citations?user=GOMspxsAAAAJ&hl=iw&oi=ao",
         "twitter": "https://twitter.com/chipmanlab",
         "linkedin": "https://linkedin.com/https://www.linkedin.com/in/ariel-chipman-861b9420/",
         "researchgate": "https://www.researchgate.net/profile/Ariel-Chipman",
