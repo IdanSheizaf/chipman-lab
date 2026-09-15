@@ -1,0 +1,44 @@
+[
+  {
+    "id": "gal-1",
+    "title": "Milkweed Bug Embryogenesis",
+    "category": "Confocal Microscopy",
+    "description": "Fluorescent confocal micrograph of Oncopeltus fasciatus embryo showing nuclear staining (DAPI in cyan) and segmentation gene expression (magenta).",
+    "imageUrl": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "gal-2",
+    "title": "Centipede Segmental Patterning",
+    "category": "Embryology",
+    "description": "Embryonic germ band of Strigamia maritima at an intermediate stage of sequential trunk segment formation.",
+    "imageUrl": "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "gal-3",
+    "title": "Spider Appendage Tagmosis",
+    "category": "Morphology",
+    "description": "Scanning electron microscopy (SEM) of anterior prosomal appendages in Parasteatoda tepidariorum.",
+    "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "gal-4",
+    "title": "Invertebrate Collections at Givat Ram",
+    "category": "Museum & Collections",
+    "description": "Specimen drawers from the National Invertebrate Collection at the Hebrew University, representing Levantine arthropod biodiversity.",
+    "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "gal-5",
+    "title": "Posterior Growth Zone Staining",
+    "category": "Confocal Microscopy",
+    "description": "High-magnification maximum projection of the active posterior proliferating growth zone during segment addition.",
+    "imageUrl": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "gal-6",
+    "title": "Lab Life & Field Sampling",
+    "category": "Field Work",
+    "description": "Collecting arthropod specimens in the Judean Hills transition zone between Mediterranean and arid habitats.",
+    "imageUrl": "https://images.unsplash.com/photo-1516214104703-d870798883c5?auto=format&fit=crop&w=1200&q=80"
+  }
+]

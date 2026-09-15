@@ -1,0 +1,22 @@
+{
+  "labName": "The Evo Devo Lab",
+  "piName": "Prof. Ariel D. Chipman",
+  "piTitle": "Associate Professor in Evolutionary Developmental Biology",
+  "department": "Department of Ecology, Evolution and Behavior (EEB)",
+  "institute": "The Alexander Silberman Institute of Life Sciences",
+  "institution": "The Hebrew University of Jerusalem",
+  "campus": "Edmond J. Safra Campus, Givat Ram",
+  "city": "Jerusalem 9190401, Israel",
+  "tagline": "Deciphering the Evolution of Arthropod Body Plans & Developmental Mechanisms",
+  "overview": "Our laboratory investigates how complex animal body plans originated and diversified throughout evolutionary history. We primarily focus on the arthropods—the most species-rich animal phylum on Earth. By integrating comparative embryology, developmental genetics, functional genomics, and paleontology, we explore the developmental and genetic mechanisms responsible for evolutionary novelty, segmentation, and head patterning.",
+  "contactEmail": "ariel.chipman@mail.huji.ac.il",
+  "labLocation": "Berman Building, Room 204, Edmond J. Safra Campus",
+  "phone": "+972-2-6585111",
+  "links": {
+    "googleScholar": "https://scholar.google.com/citations?user=GOMspxsAAAAJ",
+    "orcid": "https://orcid.org/0000-0002-3904-8971",
+    "researchGate": "https://www.researchgate.net/profile/Ariel-Chipman",
+    "departmentUrl": "https://en.lifesciences.huji.ac.il/people/ariel-chipman",
+    "lifeSciencesUrl": "https://www.bio.huji.ac.il/en"
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "news-1",
+    "date": "August 2024",
+    "title": "New Paper Published in eLife",
+    "category": "Publication",
+    "summary": "Our latest paper on anterior blastoderm patterning and head segmentation in hemimetabolous insects has just been published in eLife!",
+    "link": "https://doi.org/10.7554/eLife.94231"
+  },
+  {
+    "id": "news-2",
+    "date": "June 2024",
+    "title": "Euro Evo Devo Conference in Helsinki",
+    "category": "Conference",
+    "summary": "Members of the lab presented talks and posters on segmentation clocks and arthropod head novelty at the 9th meeting of the European Society for Evolutionary Developmental Biology.",
+    "link": ""
+  },
+  {
+    "id": "news-3",
+    "date": "March 2024",
+    "title": "Welcome New Lab Members!",
+    "category": "Team",
+    "summary": "We are thrilled to welcome Daniel Levin (M.Sc.) and Talia Ronen (Lab Manager) to our research group.",
+    "link": ""
+  },
+  {
+    "id": "news-4",
+    "date": "October 2023",
+    "title": "ISF Research Grant Awarded",
+    "category": "Grant",
+    "summary": "The lab was awarded a 4-year research grant from the Israel Science Foundation (ISF) to investigate posterior growth zone gene regulation.",
+    "link": ""
+  }
+]

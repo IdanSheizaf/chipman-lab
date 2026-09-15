@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Chipman Lab for Arthropod Evolution & Development - The Hebrew University of Jerusalem.">
+  <title>The Chipman Lab | Arthropod Evolution & Development</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./images/logos/lab_logo.png">
+
+  <!-- Google Fonts: Caudex / Heebo / Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400&family=Heebo:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            chipman: {
+              orange: '#FF8435',
+              darkorange: '#e66e20',
+              navy: '#122538',
+              slate: '#1E293B',
+              bg: '#FAF9F6',
+            }
+          },
+          fontFamily: {
+            sans: ['Heebo', 'Inter', 'sans-serif'],
+            serif: ['Caudex', 'Georgia', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #FAF9F6;
+      color: #2D3748;
+    }
+    .wix-hero {
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .wix-hero-overlay {
+      background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+    }
+    .orange-heading {
+      color: #FF8435;
+    }
+    .admin-tab-btn.active {
+      border-bottom: 2px solid #FF8435;
+      color: #FF8435;
+      font-weight: 700;
+    }
+  </style>
+
+  <!-- Load Site Data -->
+  <script src="./data.js?v=4"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- ================= TOP INSTITUTION & BRAND HEADER ================= -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <img id="header-lab-logo" decoding="async" src="./images/logos/lab_logo.png" alt="Lab Logo" class="h-16 w-16 object-contain rounded-full">
+        <div>
+          <h1 id="header-lab-name" class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-slate-900 leading-tight">
+            The EVO-DEVO Lab
+          </h1>
+          <p id="header-lab-subtitle" class="text-xs text-slate-500 font-medium tracking-wide">
+            Prof. Ariel Chipman • Arthropod Evolution & Development
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div class="text-center md:text-right text-xs sm:text-sm text-slate-600 font-serif max-w-lg leading-relaxed">
+          <p class="font-bold text-slate-900">The Hebrew University of Jerusalem</p>
+          <p class="text-slate-600">Alexander Silberman Institute of Life Sciences</p>
+          <p class="text-slate-500 text-xs">Department of Ecology, Evolution and Behaviour</p>
+        </div>
+
+        <div class="flex items-center shrink-0">
+          <a id="header-life-sciences-link" href="https://www.bio.huji.ac.il/en" target="_blank" rel="noreferrer" title="The Alexander Silberman Institute of Life Sciences - Hebrew University">
+            <img id="header-life-sciences-logo" decoding="async" src="./images/logos/huji_logo.png" alt="The Hebrew University of Jerusalem" class="h-14 sm:h-16 w-auto object-contain opacity-90 hover:opacity-100 transition">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="border-t border-slate-200 bg-white sticky top-0 z-40 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-14">
+          <nav id="desktop-nav-container" class="hidden md:flex items-center gap-1 sm:gap-2">
+            <!-- Dynamically populated from siteData.navigation -->
+          </nav>
+
+          <div class="md:hidden flex items-center">
+            <button onclick="toggleMobileMenu()" class="p-2 text-slate-600 hover:text-slate-900 focus:outline-none">
+              <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Dropdown -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1 shadow-lg">
+        <!-- Dynamically populated from siteData.navigation -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1">
+
+    <!-- ================= TAB: HOME ================= -->
+    <section id="tab-home" class="tab-content">
+      <div id="home-hero-banner" class="wix-hero h-[380px] sm:h-[480px] flex items-center justify-center text-center px-4" style="background-image: url('./images/banners/home_banner.jpg');">
+        <div class="absolute inset-0 wix-hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl text-white space-y-3">
+          <h2 id="home-title" class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            The Chipman Lab
+          </h2>
+          <p id="home-subtitle" class="text-xl sm:text-2xl font-light text-slate-100 drop-shadow">
+            For Arthropod Evolution & Development
+          </p>
+        </div>
+      </div>
+
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-12">
+        <div class="text-center space-y-4">
+          <h3 class="text-3xl sm:text-4xl font-bold orange-heading">
+            Research
+          </h3>
+          <p id="home-overview-text" class="text-lg sm:text-xl text-slate-700 leading-relaxed text-justify max-w-4xl mx-auto">
+            The Chipman lab focuses on the evolution of the arthropod body plan and on the evolution of arthropod diversity. Work in the lab can be broadly divided into three separate but related approaches:
+          </p>
+        </div>
+
+        <div id="home-approaches-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
+          <!-- Populated via JS -->
+        </div>
+
+        <div class="text-center pt-6">
+          <button onclick="switchTab('research')" class="px-8 py-3.5 rounded-xl bg-chipman-orange hover:bg-chipman-darkorange text-white font-bold text-base shadow-md shadow-orange-500/20 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2">
+            <span>Read More</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB: RESEARCH ================= -->
+    <section id="tab-research" class="tab-content hidden">
+      <div id="research-hero-banner" class="wix-hero h-[320px] sm:h-[400px] flex items-center justify-center text-center px-4" style="background-image: url('./images/banners/research_banner.jpg');">
+        <div class="absolute inset-0 wix-hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl text-white">
+          <h2 class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            Research
+          </h2>
+        </div>
+      </div>
+
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-12">
+        <div id="research-intro-display" class="bg-white rounded-2xl p-8 border border-slate-200 text-lg text-slate-700 leading-relaxed shadow-sm">
+          The Chipman lab works on a range of questions related to arthropod evolution, some in collaboration with other labs and some independently. Many of these projects merge into each other and the borders between them are not hard.
+        </div>
+
+        <div id="research-projects-list" class="space-y-8">
+          <!-- Populated via JS -->
+        </div>
+
+        <div class="text-center pt-4">
+          <button onclick="switchTab('publications')" class="px-8 py-3.5 rounded-xl bg-chipman-orange hover:bg-chipman-darkorange text-white font-bold text-base shadow-md transition inline-flex items-center gap-2">
+            <span>See Publications</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB: GROUP ================= -->
+    <section id="tab-group" class="tab-content hidden">
+      <div id="group-hero-banner" class="wix-hero h-[320px] sm:h-[400px] flex items-center justify-center text-center px-4" style="background-image: url('./images/banners/group_banner.jpg');">
+        <div class="absolute inset-0 wix-hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl text-white">
+          <h2 class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            Group
+          </h2>
+        </div>
+      </div>
+
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
+        <!-- PI Profile (Prof. Ariel Chipman) -->
+        <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+            <div class="md:col-span-4 flex flex-col items-center text-center">
+              <img id="pi-photo-display" loading="eager" decoding="async" src="./images/team/ariel_chipman.jpg" alt="Prof. Ariel Chipman" class="w-52 h-52 rounded-2xl object-cover shadow-md border-2 border-slate-100">
+              <h3 id="pi-name-display" class="text-xl font-bold text-slate-900 mt-4">Prof. Ariel Chipman</h3>
+              <p id="pi-role-display" class="text-sm text-chipman-orange font-semibold">Principal Investigator</p>
+              
+              <div id="pi-socials-container" class="flex flex-wrap items-center justify-center gap-3 mt-4">
+                <!-- Dynamically populated via JS: only provided socials are shown! -->
+              </div>
+            </div>
+
+            <div class="md:col-span-8 space-y-4 text-justify text-slate-700 leading-relaxed text-base sm:text-lg">
+              <p id="pi-bio-display">
+                My scientific interests lie first and foremost in the field of evolutionary biology, specifically animal evolution. I ask questions about the origin and evolution of central features of animal morphology and body plans and about how these are modified to generate diversity. My scientific philosophy is that any subject should be studied using all available data sources, and this is especially true for studying evolution. To paraphrase Dobzhansky’s famous maxim: "Everything in biology provides evidence for evolution". For me "interdisciplinarity" is not just a buzzword but a definition of the way I think about evolution. Thus, my aim is to adopt a total-evidence approach to studying animal evolution, with my focus being on the evolution of the arthropod body plan.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Members Grid -->
+        <div class="space-y-6">
+          <h3 class="text-2xl font-bold orange-heading">Lab Members</h3>
+          <div id="wix-members-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Alumni Section from Wix preview -->
+        <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-6">
+          <h3 class="text-2xl font-bold orange-heading">Alumni</h3>
+          <div id="alumni-grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm text-slate-700">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB: PUBLICATIONS ================= -->
+    <section id="tab-publications" class="tab-content hidden">
+      <div id="pub-hero-banner" class="wix-hero h-[320px] sm:h-[400px] flex items-center justify-center text-center px-4" style="background-image: url('./images/banners/publications_banner.jpg');">
+        <div class="absolute inset-0 wix-hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl text-white">
+          <h2 class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            Publications
+          </h2>
+        </div>
+      </div>
+
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-8">
+        <h3 class="text-xl sm:text-2xl text-slate-700 font-medium">
+          Here is a list of our most recent and relevant articles:
+        </h3>
+
+        <div id="publications-list-container" class="space-y-6">
+          <!-- Populated via JS -->
+        </div>
+
+        <div class="text-center pt-8">
+          <a id="pub-scholar-btn" href="https://scholar.google.com/citations?user=GOMspxsAAAAJ" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 text-slate-600 hover:text-chipman-orange font-semibold text-sm transition">
+            <span>View all publications on Google Scholar</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB: GALLERY ================= -->
+    <section id="tab-gallery" class="tab-content hidden">
+      <div id="gallery-hero-banner" class="wix-hero h-[320px] sm:h-[400px] flex items-center justify-center text-center px-4" style="background-image: url('./images/banners/gallery_banner.jpg');">
+        <div class="absolute inset-0 wix-hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl text-white">
+          <h2 class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            Gallery
+          </h2>
+        </div>
+      </div>
+
+      <div id="gallery-sections-container" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
+        <!-- Dynamic Gallery Sub-Sections Populated via JS -->
+      </div>
+    </section>
+
+    <!-- ================= TAB: WHAT'S HAPPENING ================= -->
+    <section id="tab-news" class="tab-content hidden">
+      <div id="news-hero-banner" class="wix-hero h-[320px] sm:h-[400px] flex items-center justify-center text-center px-4" style="background-image: url('./images/banners/news_banner.jpg');">
+        <div class="absolute inset-0 wix-hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl text-white">
+          <h2 class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            What’s happening
+          </h2>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-8">
+        <h3 class="text-xl sm:text-2xl text-slate-700 font-medium">
+          Here is a list of our most recent events:
+        </h3>
+
+        <div id="news-list-container" class="space-y-4">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB: CONTACT ================= -->
+    <section id="tab-contact" class="tab-content hidden">
+      <div id="contact-hero-banner" class="wix-hero h-[320px] sm:h-[400px] flex items-center justify-center text-center px-4" style="background-image: url('./images/banners/contact_banner.jpg');">
+        <div class="absolute inset-0 wix-hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl text-white">
+          <h2 class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">
+            Contact Us!
+          </h2>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-12">
+        <div class="text-center space-y-3">
+          <p class="text-xl text-slate-700 font-medium">
+            If you are interested in working with us, please contact us:
+          </p>
+        </div>
+
+        <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-6">
+            <div class="space-y-1">
+              <h4 class="text-xs uppercase tracking-wider text-slate-400 font-bold">Department</h4>
+              <p class="text-base font-semibold text-slate-900">
+                Department of Ecology, Evolution and Behavior (EEB)
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs uppercase tracking-wider text-slate-400 font-bold">Address</h4>
+              <p id="contact-address-display" class="text-sm text-slate-700 leading-relaxed">
+                Berman Building, Edmond J. Safra Campus<br>
+                Givat Ram, Jerusalem, Israel
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs uppercase tracking-wider text-slate-400 font-bold">Email</h4>
+              <a id="contact-email-display" href="mailto:Ariel.Chipman@mail.huji.ac.il" class="text-base text-chipman-orange hover:underline font-semibold">
+                Ariel.Chipman@mail.huji.ac.il
+              </a>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="text-xs uppercase tracking-wider text-slate-400 font-bold">Telephone</h4>
+              <p id="contact-phone-display" class="text-base text-slate-700">
+                (+972) 02-6585816
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-4 text-center">
+            <div class="w-12 h-12 rounded-full bg-orange-100 text-chipman-orange mx-auto flex items-center justify-center">
+              <i data-lucide="map-pin" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 text-lg">Find Us on Campus</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Located on the Edmond J. Safra Campus of the Hebrew University in Givat Ram.
+            </p>
+            <a id="contact-map-link" href="https://www.google.com/maps/search/?api=1&query=Berman+Building+Hebrew+University" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold shadow transition">
+              <span>Open in Google Maps</span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= DYNAMIC CUSTOM SECTIONS CONTAINER ================= -->
+    <div id="custom-sections-container">
+      <!-- Dynamically populated from siteData.customSections -->
+    </div>
+
+  </main>
+
+  <!-- ================= LIGHTBOX MODAL ================= -->
+  <div id="gallery-lightbox" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeLightbox()">
+    <div class="relative max-w-4xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl flex flex-col" onclick="event.stopPropagation()">
+      <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/60 text-white hover:bg-black transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="max-h-[75vh] flex items-center justify-center bg-black">
+        <img id="lightbox-img" src="" alt="" decoding="async" class="max-h-[75vh] w-auto object-contain">
+      </div>
+      <div class="p-5 bg-slate-900 text-white">
+        <h4 id="lightbox-title" class="text-lg font-bold"></h4>
+        <p id="lightbox-caption" class="text-xs text-slate-400 mt-1"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white border-t border-slate-200 py-10 mt-16 text-center text-xs text-slate-500 space-y-2">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="font-serif text-sm text-slate-700">
+        The Hebrew University of Jerusalem • Alexander Silberman Institute of Life Sciences
+      </p>
+      <p>© 2023 by the Evo-Devo lab</p>
+      <p class="text-[11px] text-slate-400/80 mt-1">© Idan Sheizaf</p>
+    </div>
+  </footer>
+
+  <!-- ================= APP & CMS SCRIPT ================= -->
+  <script>
+    // Global site data reference
+    // Global site data reference
+    let siteData = window.LAB_DATA;
+
+    // Automatic migration for legacy flat image hashes to organized subdirectories
+    function autoMigrateImagePaths(obj, isAnimals = false) {
+      if (!obj || typeof obj !== 'object') return;
+      const hashFilenameMap = {
+        'lab_logo.png': './images/logos/lab_logo.png',
+        '7ca772_46ac9bc226b845b58d10d5cff5488009~mv2.png': './images/logos/huji_logo.png',
+        '7ca772_777d4834a0274a1db22685180e925160~mv2.png': './images/logos/lab_logo_hd.png',
+        '7ca772_f90c9d9b4ac84360be7666e873f159e7~mv2.jpg': './images/banners/home_banner.jpg',
+        '7ca772_08c3cdb70a21492b8973f77737c1a363~mv2.jpg': './images/banners/research_banner.jpg',
+        '7ca772_a04a0a3b650a4981a785fb9d511cf8bf~mv2.jpg': './images/banners/group_banner.jpg',
+        '7ca772_7cb4c26bb7d44f6aa0a9bdb980642b6c~mv2.jpg': './images/banners/publications_banner.jpg',
+        '7ca772_ac09c0cd45b54d9bbb74db2b607c1123~mv2.jpg': './images/banners/gallery_banner.jpg',
+        '7ca772_29668e9c17e74edfac6a82e6b3b1b34b~mv2.jpg': './images/banners/news_banner.jpg',
+        '7ca772_1c043d4c338947fa9664d199b9b75a4a~mv2.jpg': './images/banners/contact_banner.jpg',
+        '7ca772_feac07e719a64301b1a2ac89e988b154~mv2.jpg': './images/team/ariel_chipman.jpg',
+        '7ca772_bca0d1ed11ee444fb5414464ce5a1519~mv2.png': './images/team/placeholder_member.png',
+        '7ca772_a18fb63bfc554fadbcb3429ead0be469~mv2.webp': './images/team/mira_cohen.webp',
+        '7ca772_ef1be1c705a84c619304c775e102cb07~mv2.webp': './images/team/asya_novikov.webp',
+        '7ca772_ad0ccdc2a91e40378b4cb2647cf04921~mv2.webp': './images/team/judy_wexler.webp',
+        '7ca772_d829c3ae1a1c4982bd410e74e15de804~mv2.webp': './images/team/olga_volovych.webp',
+        '7ca772_1c8ac00fa9324998ad3610f228465338~mv2.webp': './images/team/oren_lev.webp',
+        '7ca772_5fffefdc66de4f03a436e6aa0e82050d~mv2.webp': './images/team/nitzan_alon.webp',
+        '7ca772_5f388b54aa83466f95b8cede21a3ca76~mv2.webp': './images/team/idan_sheizaf.webp',
+        '7ca772_5bc384f881ba40f9a43aa59550883747~mv2.webp': './images/team/ariel_bar_lev.webp',
+        '7ca772_09911aa843c4465290666aa50692aaac~mv2.jpeg': './images/gallery/activities/lab_photo_march_2021.jpeg',
+        '7ca772_1da3b405e47245fdab9a137dc8a0e5b3~mv2.jpg': './images/gallery/activities/group_photo_july_2018.jpg',
+        '7ca772_c5626cfd13234a0587caeb1bfecf55fa~mv2.jpeg': './images/gallery/activities/group_photo_november_2018.jpeg',
+        '7ca772_9d2bfdc5faa34b608cba1759e044cbad~mv2.jpg': './images/gallery/activities/group_photo_september_2013.jpg',
+        '7ca772_471b2ace2a2d4dceb21710392b3a5fe0~mv2.jpg': './images/gallery/activities/group_photo_august_2011.jpg',
+        '7ca772_4b8791b79f8d4c6689745196a1a5b254~mv2.jpg': './images/gallery/activities/group_photo_september_2009.jpg',
+        '7ca772_de43eecdfea3490a9887d2c1cdddfa32~mv2.jpeg': './images/gallery/activities/corona_lab_gathering.jpeg',
+        '7ca772_e15f5fb1c3894c6a89aedba5cc6cc5fd~mv2.jpeg': './images/gallery/activities/lab_gathering_3084.jpeg',
+        '7ca772_be10568ffa244ac68b46f2b0a09f3a54~mv2.jpeg': './images/gallery/activities/lab_activity_9723.jpeg',
+        '7ca772_f55c13fe6932438fb93d80bc64ce69b0~mv2.jpg': './images/gallery/activities/lab_gathering_1986.jpg',
+        '7ca772_02cc52432bc34fbf96d37e7b3f7681ce~mv2.jpeg': './images/gallery/activities/lab_activity_1011.jpeg',
+        '7ca772_f84b0794d4984d9e82b9cda00a676450~mv2.jpeg': './images/gallery/activities/lab_activity_1012.jpeg'
+      };
+
+      for (let k in obj) {
+        if (typeof obj[k] === 'string') {
+          const val = obj[k];
+          const filename = val.split(/[?#]/)[0].replace(/\\/g, '/').split('/').pop();
+          if (isAnimals && (k === 'image' || k === 'photo')) {
+            if (val.includes('f90c9d9b')) obj[k] = './images/gallery/animals/milkweed_bug_adult.jpg';
+            else if (val.includes('29668e9c')) obj[k] = './images/gallery/animals/lab_culture_specimens.jpg';
+            else if (val.includes('a04a0a3b')) obj[k] = './images/gallery/animals/oncopeltus_fasciatus_feeding.jpg';
+            else if (val.includes('ac09c0cd')) obj[k] = './images/gallery/animals/milkweed_bug_instar.jpg';
+            else if (val.includes('7cb4c26b')) obj[k] = './images/gallery/animals/specimen_photography.jpg';
+            else if (val.includes('08c3cdb7')) obj[k] = './images/gallery/animals/milkweed_colony_cluster.jpg';
+            else if (hashFilenameMap[filename]) obj[k] = hashFilenameMap[filename];
+          } else if (hashFilenameMap[filename]) {
+            obj[k] = hashFilenameMap[filename];
+          }
+        } else if (typeof obj[k] === 'object') {
+          autoMigrateImagePaths(obj[k], isAnimals || obj[k]?.id === 'animals' || k === 'animals');
+        }
+      }
+    }
+
+    autoMigrateImagePaths(siteData);
+
+    // Rich text formatter: converts markdown (**bold**, *italic*, _italic_) and newlines, preserving HTML tags
+    function formatRichText(str) {
+      if (!str) return '';
+      let res = String(str);
+      // Bold: **text**
+      res = res.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+      // Italic: *text* (not matching **)
+      res = res.replace(/(^|[^*])\*([^*\r\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
+      // Italic: _text_ (surrounded by space/punctuation)
+      res = res.replace(/(^|\s)_([^_]+?)_(?=\s|[.,;:!?]|$)/g, '$1<em>$2</em>');
+      // Newlines to <br>
+      res = res.replace(/\r\n|\n/g, '<br>');
+      return res;
+    }
+
+// Canonical site data loaded from data.js
+
+    // Default navigation items if not present in siteData
+    const DEFAULT_NAVIGATION = [
+      { id: 'home', label: 'Home', enabled: true, isCustom: false },
+      { id: 'research', label: 'Research', enabled: true, isCustom: false },
+      { id: 'group', label: 'Group', enabled: true, isCustom: false },
+      { id: 'publications', label: 'Publications', enabled: true, isCustom: false },
+      { id: 'gallery', label: 'Gallery', enabled: true, isCustom: false },
+      { id: 'news', label: 'What’s happening', enabled: true, isCustom: false },
+      { id: 'contact', label: 'Contact', enabled: true, isCustom: false }
+    ];
+
+    function getNavItems() {
+      return (siteData.navigation && siteData.navigation.length) ? siteData.navigation : DEFAULT_NAVIGATION;
+    }
+
+    // Render Dynamic Navigation Bar & Mobile Menu
+    function renderNavigation() {
+      const desktopNav = document.getElementById('desktop-nav-container');
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (!desktopNav || !mobileMenu) return;
+
+      const navItems = getNavItems().filter(item => item.enabled);
+
+      desktopNav.innerHTML = navItems.map(item => `
+        <button onclick="switchTab('${item.id}')" id="nav-btn-${item.id}" class="nav-btn px-4 py-2 rounded text-sm font-medium transition text-slate-700 hover:text-chipman-orange hover:bg-slate-50">
+          ${item.label}
+        </button>
+      `).join('');
+
+      mobileMenu.innerHTML = navItems.map(item => `
+        <button onclick="switchTab('${item.id}')" class="w-full text-left px-3 py-2 text-base text-slate-700 font-medium hover:text-chipman-orange hover:bg-orange-50 rounded-lg">
+          ${item.label}
+        </button>
+      `).join('');
+    }
+
+    // Render Custom Sections
+    function renderCustomSections() {
+      const container = document.getElementById('custom-sections-container');
+      if (!container) return;
+      const customList = siteData.customSections || [];
+
+      container.innerHTML = customList.map(sec => `
+        <section id="tab-${sec.id}" class="tab-content hidden">
+          <div class="wix-hero h-[320px] sm:h-[400px] flex items-center justify-center text-center px-4" style="background-image: url('${sec.banner || './images/banners/home_banner.jpg'}');">
+            <div class="absolute inset-0 wix-hero-overlay"></div>
+            <div class="relative z-10 max-w-4xl text-white space-y-2">
+              <h2 class="text-4xl sm:text-6xl font-bold tracking-tight text-white drop-shadow-md">${sec.title}</h2>
+              ${sec.subtitle ? `<p class="text-lg sm:text-xl text-slate-200">${formatRichText(sec.subtitle)}</p>` : ''}
+            </div>
+          </div>
+
+          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-8">
+            ${sec.intro ? `
+              <div class="bg-white rounded-2xl p-8 border border-slate-200 text-lg text-slate-700 leading-relaxed shadow-sm text-justify">
+                ${formatRichText(sec.intro)}
+              </div>
+            ` : ''}
+
+            <div class="space-y-6">
+              ${(sec.blocks || []).map(b => `
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-3">
+                  ${b.title ? `<h3 class="text-2xl font-bold orange-heading">${formatRichText(b.title)}</h3>` : ''}
+                  ${b.content ? `<p class="text-slate-700 leading-relaxed text-justify">${formatRichText(b.content)}</p>` : ''}
+                  ${b.linkUrl ? `
+                    <div class="pt-2">
+                      <a href="${b.linkUrl}" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold transition shadow-sm">
+                        <span>${b.linkLabel || 'Learn More'}</span>
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                      </a>
+                    </div>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+      `).join('');
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      const activeNavItems = getNavItems().filter(item => item.enabled);
+      const isEnabled = activeNavItems.some(item => item.id === tabId);
+
+      // If requested tab is disabled, fall back to first enabled tab
+      if (!isEnabled && activeNavItems.length > 0) {
+        tabId = activeNavItems[0].id;
+      }
+
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeEl = document.getElementById(`tab-${tabId}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-chipman-orange', 'bg-orange-50', 'font-bold');
+        btn.classList.add('text-slate-700');
+      });
+      const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('text-chipman-orange', 'bg-orange-50', 'font-bold');
+        activeBtn.classList.remove('text-slate-700');
+      }
+
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenu) mobileMenu.classList.add('hidden');
+      window.location.hash = tabId;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    // Render Home Approaches
+    function renderHomeApproaches() {
+      const container = document.getElementById('home-approaches-container');
+      if (!container || !siteData.homeApproaches) return;
+      container.innerHTML = siteData.homeApproaches.map(app => `
+        <div class="bg-white rounded-2xl p-7 border border-slate-200 shadow-sm hover:shadow-md transition space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-full bg-orange-100 text-chipman-orange flex items-center justify-center font-bold text-lg">
+              ${app.num}
+            </div>
+            <h4 class="text-xl font-bold text-slate-900 leading-snug">${formatRichText(app.title)}</h4>
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Current Projects:</p>
+            <ul class="space-y-2 text-sm text-slate-600">
+              ${(app.projects || []).map(p => `
+                <li class="flex items-start gap-2">
+                  <span class="text-chipman-orange">•</span>
+                  <span>${formatRichText(p)}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Research Projects & Lead Intro
+    function renderResearchProjects() {
+      if (siteData.researchIntro) {
+        const rIntro = document.getElementById('research-intro-display');
+        if (rIntro) rIntro.innerHTML = formatRichText(siteData.researchIntro);
+      }
+      const container = document.getElementById('research-projects-list');
+      if (!container || !siteData.researchProjects) return;
+      container.innerHTML = siteData.researchProjects.map(p => `
+        <article class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-2xl font-bold orange-heading">${formatRichText(p.title)}</h3>
+          <p class="text-slate-700 leading-relaxed text-justify">${formatRichText(p.description)}</p>
+          ${p.organisms && p.organisms.length ? `
+            <div class="pt-2 flex flex-wrap gap-2 text-xs">
+              <span class="text-slate-400 font-semibold">Organisms:</span>
+              ${p.organisms.map(o => `<span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded italic">${o}</span>`).join('')}
+            </div>
+          ` : ''}
+        </article>
+      `).join('');
+    }
+
+    // Render Group Members & PI (Conditional Social Badges)
+    function renderGroup() {
+      // PI
+      const pi = siteData.team.pi;
+      document.getElementById('pi-name-display').innerText = pi.name || 'Prof. Ariel Chipman';
+      document.getElementById('pi-role-display').innerText = pi.role || 'Principal Investigator';
+      document.getElementById('pi-bio-display').innerHTML = formatRichText(pi.bio || '');
+      document.getElementById('pi-photo-display').src = pi.photo || './images/team/ariel_chipman.jpg';
+
+      // PI Socials (Only render link if provided!)
+      const piSoc = pi.socials || {};
+      let piSocialsHtml = '';
+      if (pi.email && pi.email.trim()) {
+        piSocialsHtml += `
+          <a href="mailto:${pi.email.trim()}" title="Email" class="hover:scale-110 transition">
+            <img src="./images/icons/email.png" alt="Email" class="w-6 h-6 object-contain">
+          </a>`;
+      }
+      if (piSoc.scholar && piSoc.scholar.trim()) {
+        piSocialsHtml += `
+          <a href="${piSoc.scholar.trim()}" target="_blank" rel="noreferrer" title="Google Scholar" class="hover:scale-110 transition">
+            <img src="./images/icons/google_scholar.png" alt="Scholar" class="w-6 h-6 object-contain">
+          </a>`;
+      }
+      if (piSoc.orcid && piSoc.orcid.trim()) {
+        piSocialsHtml += `
+          <a href="${piSoc.orcid.trim()}" target="_blank" rel="noreferrer" title="ORCID" class="hover:scale-110 transition flex items-center justify-center w-6 h-6">
+            <svg class="w-6 h-6" viewBox="0 0 256 256">
+              <circle cx="128" cy="128" r="128" fill="#A6CE39"/>
+              <path fill="#FFF" d="M70.9 79.1h15.4v107.1H70.9V79.1zm37.6 0c26.7 0 43.1 17.5 43.1 53.5 0 35.8-16.4 53.6-43.1 53.6H93V79.1h15.5zm-.2 16.8h-7.6v73.5h7.6c17.5 0 27.2-12.7 27.2-36.8 0-24-9.7-36.7-27.2-36.7zM78.6 44.5c5.3 0 9.7 4.4 9.7 9.7s-4.4 9.7-9.7 9.7-9.7-4.4-9.7-9.7 4.4-9.7 9.7-9.7z"/>
+            </svg>
+          </a>`;
+      }
+      if (piSoc.researchgate && piSoc.researchgate.trim()) {
+        piSocialsHtml += `
+          <a href="${piSoc.researchgate.trim()}" target="_blank" rel="noreferrer" title="ResearchGate" class="hover:scale-110 transition">
+            <img src="./images/icons/researchgate.png" alt="ResearchGate" class="w-6 h-6 object-contain">
+          </a>`;
+      }
+      if (piSoc.twitter && piSoc.twitter.trim()) {
+        piSocialsHtml += `
+          <a href="${piSoc.twitter.trim()}" target="_blank" rel="noreferrer" title="Twitter / X" class="hover:scale-110 transition">
+            <img src="./images/icons/twitter.png" alt="Twitter" class="w-6 h-6 object-contain">
+          </a>`;
+      }
+      if (piSoc.linkedin && piSoc.linkedin.trim()) {
+        piSocialsHtml += `
+          <a href="${piSoc.linkedin.trim()}" target="_blank" rel="noreferrer" title="LinkedIn" class="hover:scale-110 transition">
+            <img src="./images/icons/linkedin.png" alt="LinkedIn" class="w-6 h-6 object-contain">
+          </a>`;
+      }
+      const piSocContainer = document.getElementById('pi-socials-container');
+      if (piSocContainer) piSocContainer.innerHTML = piSocialsHtml;
+
+      // Current members
+      const container = document.getElementById('wix-members-container');
+      if (!container || !siteData.team.current) return;
+      container.innerHTML = siteData.team.current.map(m => {
+        const soc = m.socials || {};
+        let socialsHtml = '';
+        if (soc.scholar && soc.scholar.trim()) {
+          socialsHtml += `
+            <a href="${soc.scholar.trim()}" target="_blank" rel="noreferrer" title="Google Scholar" class="hover:scale-110 transition">
+              <img src="./images/icons/google_scholar.png" alt="Scholar" class="w-5 h-5 object-contain">
+            </a>`;
+        }
+        if (soc.orcid && soc.orcid.trim()) {
+          socialsHtml += `
+            <a href="${soc.orcid.trim()}" target="_blank" rel="noreferrer" title="ORCID" class="hover:scale-110 transition flex items-center justify-center w-5 h-5">
+              <svg class="w-5 h-5" viewBox="0 0 256 256">
+                <circle cx="128" cy="128" r="128" fill="#A6CE39"/>
+                <path fill="#FFF" d="M70.9 79.1h15.4v107.1H70.9V79.1zm37.6 0c26.7 0 43.1 17.5 43.1 53.5 0 35.8-16.4 53.6-43.1 53.6H93V79.1h15.5zm-.2 16.8h-7.6v73.5h7.6c17.5 0 27.2-12.7 27.2-36.8 0-24-9.7-36.7-27.2-36.7zM78.6 44.5c5.3 0 9.7 4.4 9.7 9.7s-4.4 9.7-9.7 9.7-9.7-4.4-9.7-9.7 4.4-9.7 9.7-9.7z"/>
+              </svg>
+            </a>`;
+        }
+        if (soc.researchgate && soc.researchgate.trim()) {
+          socialsHtml += `
+            <a href="${soc.researchgate.trim()}" target="_blank" rel="noreferrer" title="ResearchGate" class="hover:scale-110 transition">
+              <img src="./images/icons/researchgate.png" alt="ResearchGate" class="w-5 h-5 object-contain">
+            </a>`;
+        }
+        if (soc.twitter && soc.twitter.trim()) {
+          socialsHtml += `
+            <a href="${soc.twitter.trim()}" target="_blank" rel="noreferrer" title="Twitter / X" class="hover:scale-110 transition">
+              <img src="./images/icons/twitter.png" alt="Twitter" class="w-5 h-5 object-contain">
+            </a>`;
+        }
+        if (soc.linkedin && soc.linkedin.trim()) {
+          socialsHtml += `
+            <a href="${soc.linkedin.trim()}" target="_blank" rel="noreferrer" title="LinkedIn" class="hover:scale-110 transition">
+              <img src="./images/icons/linkedin.png" alt="LinkedIn" class="w-5 h-5 object-contain">
+            </a>`;
+        }
+
+        return `
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-5 items-center sm:items-start hover:shadow-md transition">
+          <img loading="lazy" decoding="async" src="${m.photo || './images/team/placeholder_member.png'}" alt="${m.name}" class="w-32 h-32 rounded-xl object-cover shrink-0 border border-slate-100 shadow-sm">
+          <div class="space-y-2 text-center sm:text-left flex-1">
+            <h4 class="text-xl font-bold text-slate-900">${m.name}</h4>
+            <p class="text-xs font-bold text-chipman-orange uppercase tracking-wider">${m.role}</p>
+            <p class="text-sm text-slate-650 leading-relaxed text-justify">${formatRichText(m.bio)}</p>
+            
+            <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-3">
+              ${m.email ? `
+                <a href="mailto:${m.email}" class="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-chipman-orange transition mr-2">
+                  <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                  <span>${m.email}</span>
+                </a>
+              ` : ''}
+              ${socialsHtml ? `
+                <div class="flex items-center gap-2.5">
+                  ${socialsHtml}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+      // Alumni
+      const aGrid = document.getElementById('alumni-grid-container');
+      if (aGrid && siteData.team.alumni) {
+        aGrid.innerHTML = siteData.team.alumni.map(a => `
+          <div class="p-3 bg-slate-50 rounded-lg">
+            <strong>${a.name}</strong> (${formatRichText(a.degree)})
+          </div>
+        `).join('');
+      }
+    }
+
+    // Render Publications
+    function renderPublications() {
+      const pubScholarBtn = document.getElementById('pub-scholar-btn');
+      if (pubScholarBtn) {
+        const scholarUrl = siteData.labInfo?.links?.googleScholar || siteData.team?.pi?.socials?.scholar || 'https://scholar.google.com/citations?user=GOMspxsAAAAJ';
+        pubScholarBtn.href = scholarUrl;
+      }
+
+      const container = document.getElementById('publications-list-container');
+      if (!container || !siteData.publications) return;
+      container.innerHTML = siteData.publications.map(p => `
+        <article class="bg-white rounded-2xl p-7 border border-slate-200 shadow-sm space-y-2.5">
+          <h4 class="text-xl font-bold text-slate-900 leading-snug">${formatRichText(p.title)}</h4>
+          <p class="text-slate-600 text-sm italic">${p.authors}</p>
+          <p class="text-xs font-semibold text-chipman-orange">${p.journal}, ${p.year}</p>
+          ${p.link ? `
+            <div class="pt-3">
+              <a href="${p.link}" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold transition">
+                <span>Read the Paper</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          ` : ''}
+        </article>
+      `).join('');
+    }
+
+    // Normalize Gallery Sections (support both new dynamic sections and legacy animals/activities)
+    function getGallerySections() {
+      if (!siteData.gallery) return [];
+      if (Array.isArray(siteData.gallery.sections)) {
+        return siteData.gallery.sections;
+      }
+      // Legacy fallback
+      const sections = [];
+      if (Array.isArray(siteData.gallery.animals)) {
+        sections.push({
+          id: 'animals',
+          title: 'Lab Animals',
+          description: 'Specimens, laboratory culture models, and developmental stages',
+          layout: 'grid-3',
+          items: siteData.gallery.animals
+        });
+      }
+      if (Array.isArray(siteData.gallery.activities)) {
+        sections.push({
+          id: 'activities',
+          title: 'Lab Activities',
+          description: 'Lab gatherings, fieldwork, and team moments',
+          layout: 'grid-4',
+          items: siteData.gallery.activities
+        });
+      }
+      return sections;
+    }
+
+    // Render Gallery Sub-Sections
+    function renderGallery() {
+      const container = document.getElementById('gallery-sections-container');
+      if (!container) return;
+
+      const sections = getGallerySections();
+      if (!sections.length) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200">
+            <p>No gallery photos available yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sections.map(sec => {
+        const gridClass = sec.layout === 'grid-4' 
+          ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+          : sec.layout === 'grid-2'
+          ? 'grid grid-cols-1 sm:grid-cols-2 gap-6'
+          : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6';
+
+        const items = sec.items || [];
+
+        return `
+          <div id="gallery-sub-${sec.id}" class="space-y-6">
+            <div class="border-b border-slate-200/80 pb-3">
+              <h3 class="text-2xl sm:text-3xl font-bold orange-heading">${sec.title}</h3>
+              ${sec.description ? `<p class="text-sm text-slate-500 mt-1">${formatRichText(sec.description)}</p>` : ''}
+            </div>
+
+            ${items.length === 0 ? `
+              <div class="bg-white rounded-xl p-8 text-center text-slate-400 text-sm border border-dashed border-slate-200">
+                No photos in this sub-section yet.
+              </div>
+            ` : `
+              <div class="${gridClass}">
+                ${items.map(item => `
+                  <div onclick="openLightbox('${item.image}', '${(item.title || '').replace(/'/g, "\\'")}', '${(item.caption || '').replace(/'/g, "\\'")}')" class="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col">
+                    <div class="aspect-[4/3] overflow-hidden bg-slate-100 relative">
+                      <img src="${item.image}" alt="${item.title || ''}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" decoding="async">
+                      <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"></div>
+                    </div>
+                    <div class="p-4 space-y-1">
+                      <h4 class="font-bold text-slate-900 text-sm">${item.title || ''}</h4>
+                      ${item.caption ? `<p class="text-xs text-slate-400 italic">${formatRichText(item.caption)}</p>` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render News
+    function renderNews() {
+      const container = document.getElementById('news-list-container');
+      if (!container || !siteData.news) return;
+      container.innerHTML = siteData.news.map(item => `
+        <div class="bg-white rounded-2xl p-7 border border-slate-200 shadow-sm space-y-2">
+          <span class="text-xs font-bold text-chipman-orange bg-orange-50 px-2.5 py-1 rounded-full">News Update</span>
+          <h4 class="text-xl font-bold text-slate-900">${formatRichText(item.title)}</h4>
+          <p class="text-slate-600 text-sm leading-relaxed">${formatRichText(item.summary)}</p>
+        </div>
+      `).join('');
+    }
+
+    // Render Contact Info
+    function renderContact() {
+      if (!siteData.labInfo) return;
+      const addrEl = document.getElementById('contact-address-display');
+      if (addrEl && siteData.labInfo.labLocation) {
+        addrEl.innerHTML = siteData.labInfo.labLocation.replace(',', '<br>') + '<br>' + (siteData.labInfo.city || 'Jerusalem, Israel');
+      }
+      const emailEl = document.getElementById('contact-email-display');
+      if (emailEl && siteData.labInfo.contactEmail) {
+        emailEl.innerText = siteData.labInfo.contactEmail;
+        emailEl.href = `mailto:${siteData.labInfo.contactEmail}`;
+      }
+      const phoneEl = document.getElementById('contact-phone-display');
+      if (phoneEl && siteData.labInfo.phone) {
+        phoneEl.innerText = siteData.labInfo.phone;
+      }
+      const mapLinkEl = document.getElementById('contact-map-link');
+      if (mapLinkEl && siteData.labInfo.mapUrl) {
+        mapLinkEl.href = siteData.labInfo.mapUrl;
+      }
+    }
+
+    function renderAll() {
+      if (siteData.labInfo) {
+        if (siteData.labInfo.logos?.labLogo) {
+          const logoEl = document.getElementById('header-lab-logo');
+          if (logoEl) logoEl.src = siteData.labInfo.logos.labLogo;
+        }
+        if (siteData.labInfo.headerBanners) {
+          const hb = siteData.labInfo.headerBanners;
+          const setBg = (id, url) => {
+            const el = document.getElementById(id);
+            if (el && url) el.style.backgroundImage = `url('${url}')`;
+          };
+          setBg('home-hero-banner', hb.home);
+          setBg('research-hero-banner', hb.research);
+          setBg('group-hero-banner', hb.group);
+          setBg('pub-hero-banner', hb.publications);
+          setBg('gallery-hero-banner', hb.gallery);
+          setBg('news-hero-banner', hb.news);
+          setBg('contact-hero-banner', hb.contact);
+        }
+        const hName = document.getElementById('header-lab-name');
+        if (hName && siteData.labInfo.labName) hName.innerText = siteData.labInfo.labName;
+        const hSub = document.getElementById('header-lab-subtitle');
+        if (hSub && siteData.labInfo.labSubtitle) hSub.innerText = siteData.labInfo.labSubtitle;
+        const hTitle = document.getElementById('home-title');
+        if (hTitle && siteData.labInfo.labName) hTitle.innerText = siteData.labInfo.labName;
+        const hHomeSub = document.getElementById('home-subtitle');
+        if (hHomeSub && siteData.labInfo.labSubtitle) hHomeSub.innerText = siteData.labInfo.labSubtitle;
+        const hOverview = document.getElementById('home-overview-text');
+        if (hOverview && siteData.labInfo.overview) hOverview.innerHTML = formatRichText(siteData.labInfo.overview);
+      }
+      if (siteData.researchIntro) {
+        const rIntro = document.getElementById('research-intro-display');
+        if (rIntro) rIntro.innerText = siteData.researchIntro;
+      }
+      renderHomeApproaches();
+      renderResearchProjects();
+      renderGroup();
+      renderPublications();
+      renderGallery();
+      renderNews();
+      renderContact();
+      renderCustomSections();
+      renderNavigation();
+      lucide.createIcons();
+    }
+
+    // Lightbox
+    function openLightbox(imgUrl, title, caption) {
+      document.getElementById('lightbox-img').src = imgUrl;
+      document.getElementById('lightbox-title').innerHTML = formatRichText(title);
+      document.getElementById('lightbox-caption').innerHTML = formatRichText(caption || '');
+      document.getElementById('gallery-lightbox').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeLightbox() {
+      document.getElementById('gallery-lightbox').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Close lightbox on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const lb = document.getElementById('gallery-lightbox');
+        if (lb && !lb.classList.contains('hidden')) {
+          closeLightbox();
+        }
+      }
+    });
+
+    // Init on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+
+      const activeNavItems = getNavItems().filter(item => item.enabled);
+      const initialHash = window.location.hash.replace('#', '').toLowerCase();
+      let active = activeNavItems.some(item => item.id === initialHash) ? initialHash : (activeNavItems[0]?.id || 'home');
+      if (initialHash === 'people' || initialHash === 'members') active = 'group';
+      switchTab(active);
+    });
+
+    window.addEventListener('hashchange', () => {
+      const h = window.location.hash.replace('#', '').toLowerCase();
+      if (h) switchTab(h === 'people' || h === 'members' ? 'group' : h);
+    });
+  </script>
+</body>
+</html>

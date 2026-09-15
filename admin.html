@@ -1,0 +1,2735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chipman Lab - CMS & Content Editor</title>
+  <link rel="icon" type="image/png" href="./images/logos/lab_logo.png">
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            chipman: {
+              orange: '#FF8435',
+              darkorange: '#e66e20',
+              navy: '#122538',
+              slate: '#1E293B',
+              bg: '#FAF9F6',
+            }
+          },
+          fontFamily: {
+            sans: ['Heebo', 'Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #0F172A;
+      color: #334155;
+    }
+    .admin-tab-btn.active {
+      border-bottom: 2px solid #FF8435;
+      color: #FF8435;
+      font-weight: 700;
+    }
+  </style>
+
+  <!-- Load current site data -->
+  <script src="./data.js?v=4"></script>
+</head>
+<body class="min-h-screen bg-slate-900 flex flex-col p-3 sm:p-6 lg:p-8">
+
+  <div class="max-w-6xl w-full mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-slate-700">
+    
+    <!-- Admin Top Header -->
+    <div class="bg-slate-950 text-white px-6 sm:px-8 py-5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800">
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-chipman-orange flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
+          <i data-lucide="layout" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg sm:text-xl leading-tight text-white flex items-center gap-2">
+            <span>EVO-DEVO Lab CMS</span>
+            <span class="text-[11px] font-semibold bg-orange-500/20 text-chipman-orange px-2 py-0.5 rounded-full border border-orange-500/30">Content Management</span>
+          </h1>
+          <p class="text-xs text-slate-400 mt-0.5">Standalone Editor • Update members, research, publications, gallery & banners</p>
+        </div>
+      </div>
+
+        <button id="admin-folder-badge" onclick="promptChangeFolder()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs text-slate-300 transition cursor-pointer" title="Click to reconnect or change folder">
+          <i data-lucide="folder-check" class="w-4 h-4 text-emerald-400"></i>
+          <span id="admin-folder-name" class="font-mono text-[11px] text-slate-300 truncate max-w-[160px]">Connected Folder</span>
+        </button>
+        <a href="index.html" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold text-xs transition border border-slate-700">
+          <span>Preview Website</span>
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+        </a>
+        <button id="admin-save-btn" onclick="saveAndExportData()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 transition disabled:opacity-75 disabled:cursor-not-allowed">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          <span id="admin-save-btn-text">Save Changes to File</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin Navigation Sub-Tabs -->
+    <div class="flex border-b border-slate-200 bg-slate-50 px-6 gap-2 sm:gap-6 overflow-x-auto shrink-0 text-sm">
+      <button onclick="switchAdminSubTab('team')" id="admin-tab-team" class="admin-tab-btn py-3.5 px-2 text-slate-600 active whitespace-nowrap">Lab Members</button>
+      <button onclick="switchAdminSubTab('approaches')" id="admin-tab-approaches" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Home Approaches</button>
+      <button onclick="switchAdminSubTab('research')" id="admin-tab-research" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Research Projects</button>
+      <button onclick="switchAdminSubTab('publications')" id="admin-tab-publications" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Publications</button>
+      <button onclick="switchAdminSubTab('gallery')" id="admin-tab-gallery" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Gallery Photos</button>
+      <button onclick="switchAdminSubTab('news')" id="admin-tab-news" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">What's Happening</button>
+      <button onclick="switchAdminSubTab('banners')" id="admin-tab-banners" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Hero Banners & Logos</button>
+      <button onclick="switchAdminSubTab('general')" id="admin-tab-general" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap">Lab Info & Contact</button>
+      <button onclick="switchAdminSubTab('sections')" id="admin-tab-sections" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap flex items-center gap-1.5">
+        <i data-lucide="menu" class="w-4 h-4"></i>
+        <span>Navigation & Sections</span>
+      </button>
+      <button onclick="switchAdminSubTab('history')" id="admin-tab-history" class="admin-tab-btn py-3.5 px-2 text-slate-600 whitespace-nowrap flex items-center gap-1.5">
+        <i data-lucide="history" class="w-4 h-4"></i>
+        <span>Version History & Archives</span>
+      </button>
+    </div>
+
+    <!-- Admin Tab Panels Container -->
+    <div class="p-6 sm:p-8 space-y-6">
+<!-- ============ PANEL: TEAM ============ -->
+        <div id="admin-panel-team" class="admin-panel space-y-8">
+          <!-- PI Settings -->
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-4">
+            <h4 class="font-bold text-slate-900 text-base">Principal Investigator (Prof. Ariel Chipman)</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">PI Name</label>
+                <input type="text" id="admin-pi-name" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">PI Title / Role</label>
+                <input type="text" id="admin-pi-role" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">PI Email</label>
+                <input type="email" id="admin-pi-email" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">PI Photo</label>
+                <div class="flex items-center gap-3">
+                  <img id="admin-pi-photo-preview" src="./images/team/ariel_chipman.jpg" class="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0">
+                  <div class="flex-1 space-y-1.5">
+                    <input type="text" id="admin-pi-photo" class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg" placeholder="Image path or choose local file">
+                    <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md text-xs font-semibold transition">
+                      <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                      <span>Browse Picture...</span>
+                      <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-pi-photo', 'admin-pi-photo-preview')">
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">PI Biography / Statement</label>
+              <textarea id="admin-pi-bio" rows="4" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg"></textarea>
+            </div>
+
+            <!-- PI Social Links -->
+            <div class="border-t border-slate-200 pt-3 space-y-2">
+              <h5 class="text-xs font-bold uppercase tracking-wider text-slate-500">PI Social & Profile Links (Leave empty to omit — links only appear if provided)</h5>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-xs text-slate-600 mb-1">Google Scholar URL</label>
+                  <input type="url" id="admin-pi-scholar" placeholder="https://scholar.google.com/..." class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-600 mb-1">ORCID URL</label>
+                  <input type="url" id="admin-pi-orcid" placeholder="https://orcid.org/..." class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-600 mb-1">ResearchGate URL</label>
+                  <input type="url" id="admin-pi-researchgate" placeholder="https://www.researchgate.net/profile/..." class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-600 mb-1">Twitter / X URL</label>
+                  <input type="url" id="admin-pi-twitter" placeholder="https://twitter.com/..." class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-600 mb-1">LinkedIn URL</label>
+                  <input type="url" id="admin-pi-linkedin" placeholder="https://linkedin.com/..." class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                </div>
+              </div>
+            </div>
+
+            <button onclick="updatePIInfo()" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition">
+              Apply PI Changes
+            </button>
+          </div>
+
+          <!-- Active Members List -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-bold text-slate-900 text-base">Current Lab Members (<span id="admin-member-count">0</span>)</h4>
+                <p class="text-xs text-slate-500">Add, edit, or remove lab members and their social links</p>
+              </div>
+              <button onclick="openAddMemberModal()" class="px-3.5 py-1.5 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Member</span>
+              </button>
+            </div>
+            <div id="admin-members-list" class="divide-y divide-slate-200 border border-slate-200 rounded-2xl bg-white overflow-hidden">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Alumni List -->
+          <div class="space-y-4 pt-4">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-slate-900 text-base">Alumni Directory</h4>
+              <button onclick="openAddAlumModal()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Alum</span>
+              </button>
+            </div>
+            <div id="admin-alumni-list" class="divide-y divide-slate-100 border border-slate-200 rounded-2xl bg-white overflow-hidden max-h-60 overflow-y-auto">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ PANEL: HOME APPROACHES ============ -->
+        <div id="admin-panel-approaches" class="admin-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-bold text-slate-900 text-base">Core Approaches on Home Page (<span id="admin-approaches-count">0</span>)</h4>
+              <p class="text-xs text-slate-500">The 3 main research pillars featured on the homepage</p>
+            </div>
+            <button onclick="openAddApproachModal()" class="px-4 py-2 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Add Approach</span>
+            </button>
+          </div>
+
+          <div id="admin-approaches-list" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- ============ PANEL: RESEARCH PROJECTS ============ -->
+        <div id="admin-panel-research" class="admin-panel hidden space-y-6">
+          <!-- Research Intro lead text -->
+          <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-slate-700">Research Page Introduction / Lead Paragraph</h5>
+            <textarea id="admin-research-intro" rows="3" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg"></textarea>
+            <button onclick="updateResearchIntro()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg">
+              Update Lead Text
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-slate-900 text-base">Research Themes & Projects (<span id="admin-research-count">0</span>)</h4>
+            <button onclick="openAddProjectModal()" class="px-4 py-2 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Add Research Project</span>
+            </button>
+          </div>
+
+          <div id="admin-research-list" class="divide-y divide-slate-200 border border-slate-200 rounded-2xl bg-white overflow-hidden">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- ============ PANEL: PUBLICATIONS ============ -->
+        <div id="admin-panel-publications" class="admin-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-slate-900 text-base">Publications List (<span id="admin-pub-count">0</span>)</h4>
+            <button onclick="openAddPubModal()" class="px-4 py-2 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Add New Publication</span>
+            </button>
+          </div>
+
+          <div id="admin-publications-list" class="divide-y divide-slate-200 border border-slate-200 rounded-2xl bg-white overflow-hidden">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- ============ PANEL: GALLERY ============ -->
+        <div id="admin-panel-gallery" class="admin-panel hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+            <div>
+              <h4 class="font-bold text-slate-900 text-base">Gallery Sub-Sections & Photo Albums</h4>
+              <p class="text-xs text-slate-500">Organize photos into custom categories (e.g. Lab Animals, Activities, Fieldwork, Microscopy, Conferences).</p>
+            </div>
+            <button onclick="openAddGallerySectionModal()" class="px-4 py-2 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-xl inline-flex items-center gap-1.5 shadow-sm transition self-start sm:self-auto">
+              <i data-lucide="folder-plus" class="w-4 h-4"></i>
+              <span>Add Sub-Section</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Gallery Sub-Sections Container -->
+          <div id="admin-gallery-sections-list" class="space-y-6">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- ============ PANEL: WHAT'S HAPPENING ============ -->
+        <div id="admin-panel-news" class="admin-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-bold text-slate-900 text-base">News & Events</h4>
+              <p class="text-xs text-slate-500">Post announcements, lab updates, and conference participations</p>
+            </div>
+            <button onclick="openAddNewsModal()" class="px-4 py-2 bg-chipman-orange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Add Event / Update</span>
+            </button>
+          </div>
+          <div id="admin-news-list" class="divide-y divide-slate-200 border border-slate-200 rounded-2xl bg-white overflow-hidden">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- ============ PANEL: BANNERS & BRANDING ============ -->
+        <div id="admin-panel-banners" class="admin-panel hidden space-y-6">
+          <div class="space-y-1">
+            <h4 class="font-bold text-slate-900 text-base">Page Hero Banners & Lab Logo</h4>
+            <p class="text-xs text-slate-500">Easily browse local photos or enter image URLs for each section's hero background banner.</p>
+          </div>
+
+          <!-- Logos Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Lab Logo -->
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+              <h5 class="font-bold text-slate-800 text-sm">Lab Brand Logo</h5>
+              <div class="flex items-center gap-4">
+                <img id="admin-banner-logo-preview" src="./images/logos/lab_logo.png" class="w-16 h-16 rounded-full object-contain bg-white border border-slate-200 p-1 shadow-sm shrink-0">
+                <div class="flex-1 space-y-2">
+                  <input type="text" id="admin-banner-logo-input" class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                  <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md text-xs font-semibold transition">
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                    <span>Browse Logo...</span>
+                    <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-logo-input', 'admin-banner-logo-preview')">
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hebrew University Logo -->
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+              <h5 class="font-bold text-slate-800 text-sm">Hebrew University Logo</h5>
+              <div class="flex items-center gap-4">
+                <img id="admin-banner-huji-preview" src="./images/logos/huji_logo.png" class="w-16 h-16 rounded-xl object-contain bg-white border border-slate-200 p-1 shadow-sm shrink-0">
+                <div class="flex-1 space-y-2">
+                  <input type="text" id="admin-banner-huji-input" class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg">
+                  <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md text-xs font-semibold transition">
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                    <span>Browse Logo...</span>
+                    <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-huji-input', 'admin-banner-huji-preview')">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Banners Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Home -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Home Page Banner</span>
+              </div>
+              <img id="admin-banner-home-preview" class="w-full h-24 rounded-lg object-cover border border-slate-200">
+              <input type="text" id="admin-banner-home-input" class="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-home-input', 'admin-banner-home-preview')">
+              </label>
+            </div>
+
+            <!-- Research -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Research Page Banner</span>
+              </div>
+              <img id="admin-banner-research-preview" class="w-full h-24 rounded-lg object-cover border border-slate-200">
+              <input type="text" id="admin-banner-research-input" class="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-research-input', 'admin-banner-research-preview')">
+              </label>
+            </div>
+
+            <!-- Group -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Group / Members Banner</span>
+              </div>
+              <img id="admin-banner-group-preview" class="w-full h-24 rounded-lg object-cover border border-slate-200">
+              <input type="text" id="admin-banner-group-input" class="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-group-input', 'admin-banner-group-preview')">
+              </label>
+            </div>
+
+            <!-- Publications -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Publications Banner</span>
+              </div>
+              <img id="admin-banner-publications-preview" class="w-full h-24 rounded-lg object-cover border border-slate-200">
+              <input type="text" id="admin-banner-publications-input" class="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-publications-input', 'admin-banner-publications-preview')">
+              </label>
+            </div>
+
+            <!-- Gallery -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Gallery Banner</span>
+              </div>
+              <img id="admin-banner-gallery-preview" class="w-full h-24 rounded-lg object-cover border border-slate-200">
+              <input type="text" id="admin-banner-gallery-input" class="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-gallery-input', 'admin-banner-gallery-preview')">
+              </label>
+            </div>
+
+            <!-- News -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">What's Happening (News) Banner</span>
+              </div>
+              <img id="admin-banner-news-preview" class="w-full h-24 rounded-lg object-cover border border-slate-200">
+              <input type="text" id="admin-banner-news-input" class="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-news-input', 'admin-banner-news-preview')">
+              </label>
+            </div>
+
+            <!-- Contact -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Contact Us Banner</span>
+              </div>
+              <img id="admin-banner-contact-preview" class="w-full h-24 rounded-lg object-cover border border-slate-200">
+              <input type="text" id="admin-banner-contact-input" class="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-contact-input', 'admin-banner-contact-preview')">
+              </label>
+            </div>
+          </div>
+
+          <button onclick="updateBannersAndLogos()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow transition">
+            Apply Banner & Logo Changes
+          </button>
+        </div>
+
+        <!-- ============ PANEL: GENERAL INFO & CONTACT ============ -->
+        <div id="admin-panel-general" class="admin-panel hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 space-y-4">
+            <h4 class="font-bold text-slate-900 text-base">General Lab Information & Contact Details</h4>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Lab Name</label>
+                <input type="text" id="admin-info-labName" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Subtitle</label>
+                <input type="text" id="admin-info-labSubtitle" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Contact Email</label>
+                <input type="email" id="admin-info-contactEmail" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Phone Number</label>
+                <input type="text" id="admin-info-phone" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Campus Physical Location</label>
+              <input type="text" id="admin-info-labLocation" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Google Maps Location Link / Search Query</label>
+              <input type="url" id="admin-info-mapUrl" placeholder="https://maps.google.com/?q=... or https://maps.app.goo.gl/..." class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+              <p class="text-[11px] text-slate-400 mt-1">Paste any Google Maps link, coordinates, or search URL to open when visitors click "Open in Google Maps".</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Life Sciences Institute Website URL (HUJI Link)</label>
+              <input type="url" id="admin-info-lifeSciencesUrl" placeholder="https://www.bio.huji.ac.il/en" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg">
+              <p class="text-[11px] text-slate-400 mt-1">Link opened when visitors click the Hebrew University emblem in the site header.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Home Overview Text</label>
+              <textarea id="admin-info-overview" rows="3" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg"></textarea>
+            </div>
+
+            <button onclick="updateGeneralInfo()" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition">
+              Apply Contact & Info Changes
+            </button>
+          </div>
+        </div>
+
+        <!-- ============ PANEL: NAVIGATION & SECTIONS ============ -->
+        <div id="admin-panel-sections" class="admin-panel hidden space-y-8">
+          
+          <!-- Built-in Sections Toggles -->
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-4">
+            <div>
+              <h4 class="font-bold text-slate-900 text-base">Website Navigation & Section Visibility</h4>
+              <p class="text-xs text-slate-500">Enable or disable sections with a single checkmark. Disabled sections are completely hidden from the public navigation bar and site.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+              <div class="bg-slate-100 px-6 py-3 border-b border-slate-200 flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>Section Name</span>
+                <span>Actions</span>
+              </div>
+              <div id="admin-nav-list" class="divide-y divide-slate-100 text-sm">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Pages / Sections Builder -->
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h4 class="font-bold text-slate-900 text-base">Custom Pages & Sections</h4>
+                <p class="text-xs text-slate-500">Create entirely new pages (e.g., Teaching, Protocols, Equipment, Join Us) with custom hero banners and content blocks.</p>
+              </div>
+              <button onclick="openAddCustomSectionModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold shadow-md transition self-start sm:self-auto">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Add New Page</span>
+              </button>
+            </div>
+
+            <div id="admin-custom-sections-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============ PANEL: HISTORY & ARCHIVE ============ -->
+        <div id="admin-panel-history" class="admin-panel hidden space-y-6">
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-bold text-slate-900 text-base">Version History & Archives</h4>
+                <p class="text-xs text-slate-500">Whenever you save changes, the previous version of <code>data.js</code> is automatically timestamped and archived. You can inspect or pull out past versions at any time.</p>
+              </div>
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold shadow transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Load Any Archived File...</span>
+                <input type="file" accept=".js,.json" class="hidden" onchange="loadCustomArchiveFile(event)">
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="bg-slate-100 px-6 py-3 border-b border-slate-200 flex items-center justify-between">
+              <h5 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Archived Versions (Local & Snapshot History)</h5>
+              <button onclick="clearDraftAndReload()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Reset to Original Base Data</button>
+            </div>
+            <div id="admin-archives-list" class="divide-y divide-slate-100 text-sm">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Admin Bottom Bar -->
+    <div class="bg-slate-100 px-8 py-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 gap-3">
+      <p class="leading-relaxed">
+        <strong>Tip:</strong> Click <span class="font-bold text-emerald-700">"Save Changes to File"</span> above to update <code>data.js</code> directly or download it.
+      </p>
+      <div class="flex items-center gap-4">
+        <span class="text-[11px] text-slate-400/80 select-none">© Idan Sheizaf</span>
+        <a href="index.html" class="text-slate-500 hover:text-chipman-orange font-medium flex items-center gap-1">
+          <span>Back to Site</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+<!-- ================= SUB-MODAL: ITEM EDIT / ADD ================= -->
+  <div id="sub-modal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 space-y-4 border border-slate-200 my-4 max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 shrink-0">
+        <h4 id="sub-modal-title" class="font-bold text-slate-900 text-base">Edit Item</h4>
+        <button onclick="closeSubModal()" class="p-1 text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="sub-modal-form" class="space-y-3.5 overflow-y-auto flex-1 pr-1">
+        <!-- Form elements generated dynamically -->
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 shrink-0">
+        <button onclick="closeSubModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg">Cancel</button>
+        <button id="sub-modal-save-btn" class="px-5 py-2 text-xs font-bold text-white bg-chipman-orange hover:bg-chipman-darkorange rounded-lg">Save</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- CMS SCRIPT -->
+  <script>
+    let siteData = window.LAB_DATA;
+
+    // Automatic migration for legacy flat image hashes to organized subdirectories
+    function autoMigrateImagePaths(obj, isAnimals = false) {
+      if (!obj || typeof obj !== 'object') return;
+      const hashFilenameMap = {
+        'lab_logo.png': './images/logos/lab_logo.png',
+        '7ca772_46ac9bc226b845b58d10d5cff5488009~mv2.png': './images/logos/huji_logo.png',
+        '7ca772_777d4834a0274a1db22685180e925160~mv2.png': './images/logos/lab_logo_hd.png',
+        '7ca772_f90c9d9b4ac84360be7666e873f159e7~mv2.jpg': './images/banners/home_banner.jpg',
+        '7ca772_08c3cdb70a21492b8973f77737c1a363~mv2.jpg': './images/banners/research_banner.jpg',
+        '7ca772_a04a0a3b650a4981a785fb9d511cf8bf~mv2.jpg': './images/banners/group_banner.jpg',
+        '7ca772_7cb4c26bb7d44f6aa0a9bdb980642b6c~mv2.jpg': './images/banners/publications_banner.jpg',
+        '7ca772_ac09c0cd45b54d9bbb74db2b607c1123~mv2.jpg': './images/banners/gallery_banner.jpg',
+        '7ca772_29668e9c17e74edfac6a82e6b3b1b34b~mv2.jpg': './images/banners/news_banner.jpg',
+        '7ca772_1c043d4c338947fa9664d199b9b75a4a~mv2.jpg': './images/banners/contact_banner.jpg',
+        '7ca772_feac07e719a64301b1a2ac89e988b154~mv2.jpg': './images/team/ariel_chipman.jpg',
+        '7ca772_bca0d1ed11ee444fb5414464ce5a1519~mv2.png': './images/team/placeholder_member.png',
+        '7ca772_a18fb63bfc554fadbcb3429ead0be469~mv2.webp': './images/team/mira_cohen.webp',
+        '7ca772_ef1be1c705a84c619304c775e102cb07~mv2.webp': './images/team/asya_novikov.webp',
+        '7ca772_ad0ccdc2a91e40378b4cb2647cf04921~mv2.webp': './images/team/judy_wexler.webp',
+        '7ca772_d829c3ae1a1c4982bd410e74e15de804~mv2.webp': './images/team/olga_volovych.webp',
+        '7ca772_1c8ac00fa9324998ad3610f228465338~mv2.webp': './images/team/oren_lev.webp',
+        '7ca772_5fffefdc66de4f03a436e6aa0e82050d~mv2.webp': './images/team/nitzan_alon.webp',
+        '7ca772_5f388b54aa83466f95b8cede21a3ca76~mv2.webp': './images/team/idan_sheizaf.webp',
+        '7ca772_5bc384f881ba40f9a43aa59550883747~mv2.webp': './images/team/ariel_bar_lev.webp',
+        '7ca772_09911aa843c4465290666aa50692aaac~mv2.jpeg': './images/gallery/activities/lab_photo_march_2021.jpeg',
+        '7ca772_1da3b405e47245fdab9a137dc8a0e5b3~mv2.jpg': './images/gallery/activities/group_photo_july_2018.jpg',
+        '7ca772_c5626cfd13234a0587caeb1bfecf55fa~mv2.jpeg': './images/gallery/activities/group_photo_november_2018.jpeg',
+        '7ca772_9d2bfdc5faa34b608cba1759e044cbad~mv2.jpg': './images/gallery/activities/group_photo_september_2013.jpg',
+        '7ca772_471b2ace2a2d4dceb21710392b3a5fe0~mv2.jpg': './images/gallery/activities/group_photo_august_2011.jpg',
+        '7ca772_4b8791b79f8d4c6689745196a1a5b254~mv2.jpg': './images/gallery/activities/group_photo_september_2009.jpg',
+        '7ca772_de43eecdfea3490a9887d2c1cdddfa32~mv2.jpeg': './images/gallery/activities/corona_lab_gathering.jpeg',
+        '7ca772_e15f5fb1c3894c6a89aedba5cc6cc5fd~mv2.jpeg': './images/gallery/activities/lab_gathering_3084.jpeg',
+        '7ca772_be10568ffa244ac68b46f2b0a09f3a54~mv2.jpeg': './images/gallery/activities/lab_activity_9723.jpeg',
+        '7ca772_f55c13fe6932438fb93d80bc64ce69b0~mv2.jpg': './images/gallery/activities/lab_gathering_1986.jpg',
+        '7ca772_02cc52432bc34fbf96d37e7b3f7681ce~mv2.jpeg': './images/gallery/activities/lab_activity_1011.jpeg',
+        '7ca772_f84b0794d4984d9e82b9cda00a676450~mv2.jpeg': './images/gallery/activities/lab_activity_1012.jpeg'
+      };
+
+      for (let k in obj) {
+        if (typeof obj[k] === 'string') {
+          const val = obj[k];
+          const filename = val.split(/[?#]/)[0].replace(/\\/g, "/").split("/").pop();
+          if (isAnimals && (k === 'image' || k === 'photo')) {
+            if (val.includes('f90c9d9b')) obj[k] = './images/gallery/animals/milkweed_bug_adult.jpg';
+            else if (val.includes('29668e9c')) obj[k] = './images/gallery/animals/lab_culture_specimens.jpg';
+            else if (val.includes('a04a0a3b')) obj[k] = './images/gallery/animals/oncopeltus_fasciatus_feeding.jpg';
+            else if (val.includes('ac09c0cd')) obj[k] = './images/gallery/animals/milkweed_bug_instar.jpg';
+            else if (val.includes('7cb4c26b')) obj[k] = './images/gallery/animals/specimen_photography.jpg';
+            else if (val.includes('08c3cdb7')) obj[k] = './images/gallery/animals/milkweed_colony_cluster.jpg';
+            else if (hashFilenameMap[filename]) obj[k] = hashFilenameMap[filename];
+          } else if (hashFilenameMap[filename]) {
+            obj[k] = hashFilenameMap[filename];
+          }
+        } else if (typeof obj[k] === 'object') {
+          autoMigrateImagePaths(obj[k], isAnimals || obj[k]?.id === 'animals' || k === 'animals');
+        }
+      }
+    }
+
+    // Rich text formatter: converts markdown (**bold**, *italic*, _italic_) and newlines, preserving HTML tags
+    function formatRichText(str) {
+      if (!str) return '';
+      let res = String(str);
+      res = res.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+      res = res.replace(/(^|[^*])\*([^*\r\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
+      res = res.replace(/(^|\s)_([^_]+?)_(?=\s|[.,;:!?]|$)/g, '$1<em>$2</em>');
+      res = res.replace(/\r\n|\n/g, '<br>');
+      return res;
+    }
+
+    // Apply bold or italic formatting to a text element or selection
+    function applyFormatting(el, prefix, suffix) {
+      if (!el) return;
+      const start = el.selectionStart ?? 0;
+      const end = el.selectionEnd ?? 0;
+      const val = el.value || '';
+      const selected = val.substring(start, end);
+
+      const prefixLen = prefix.length;
+      const suffixLen = suffix.length;
+
+      if (selected.startsWith(prefix) && selected.endsWith(suffix) && selected.length >= (prefixLen + suffixLen)) {
+        // Selection is already wrapped -> unwrap it
+        const unwrapped = selected.slice(prefixLen, -suffixLen);
+        el.value = val.substring(0, start) + unwrapped + val.substring(end);
+        el.setSelectionRange(start, start + unwrapped.length);
+      } else if (start >= prefixLen && end <= val.length - suffixLen &&
+                 val.substring(start - prefixLen, start) === prefix &&
+                 val.substring(end, end + suffixLen) === suffix) {
+        // Selection was between markers -> unwrap it
+        el.value = val.substring(0, start - prefixLen) + selected + val.substring(end + suffixLen);
+        el.setSelectionRange(start - prefixLen, end - prefixLen);
+      } else {
+        // Wrap selection
+        const replacement = prefix + selected + suffix;
+        el.value = val.substring(0, start) + replacement + val.substring(end);
+        if (selected.length === 0) {
+          el.setSelectionRange(start + prefixLen, start + prefixLen);
+        } else {
+          el.setSelectionRange(start, start + replacement.length);
+        }
+      }
+
+      el.focus();
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function applyFormatToId(id, prefix, suffix) {
+      const el = document.getElementById(id);
+      if (el) {
+        applyFormatting(el, prefix, suffix);
+      }
+    }
+
+    function formatBtnClick(btn, prefix, suffix) {
+      let container = btn.closest('.block-item') || btn.closest('.space-y-2') || btn.closest('.space-y-1') || btn.parentElement.parentElement;
+      let target = container ? container.querySelector('textarea, input[type="text"]') : null;
+      if (!target && btn.parentElement && btn.parentElement.nextElementSibling) {
+        target = btn.parentElement.nextElementSibling.matches('textarea, input') 
+          ? btn.parentElement.nextElementSibling 
+          : btn.parentElement.nextElementSibling.querySelector('textarea, input');
+      }
+      if (target) {
+        applyFormatting(target, prefix, suffix);
+      }
+    }
+
+    // Global keyboard shortcut listener for Ctrl+B (Bold) and Ctrl+I (Italics) across all inputs and textareas
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B' || e.key === 'i' || e.key === 'I')) {
+        const active = document.activeElement;
+        if (active && (active.tagName === 'TEXTAREA' || (active.tagName === 'INPUT' && (active.type === 'text' || active.type === 'search' || !active.type)))) {
+          e.preventDefault();
+          if (e.key === 'b' || e.key === 'B') {
+            applyFormatting(active, '**', '**');
+          } else {
+            applyFormatting(active, '*', '*');
+          }
+        }
+      }
+    });
+
+
+    // Load from localStorage if a previous unsaved draft exists
+    try {
+      const draft = localStorage.getItem('chipman_lab_draft');
+      if (draft) {
+        siteData = JSON.parse(draft);
+      }
+    } catch (e) {}
+
+    // Automatically convert any legacy image paths to organized subdirectories
+    autoMigrateImagePaths(siteData);
+    window.LAB_DATA = siteData;
+
+    function persistDraft() {
+      try {
+        autoMigrateImagePaths(siteData);
+        localStorage.setItem('chipman_lab_draft', JSON.stringify(siteData));
+      } catch (e) {}
+    }
+    persistDraft();
+
+    // Image File Picker Helper: Converts chosen local file to data URL and updates preview
+    function handleImageFileSelect(event, targetInputId, previewImgId) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        const inputEl = document.getElementById(targetInputId);
+        if (inputEl) {
+          inputEl.value = dataUrl;
+          inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+          inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        if (previewImgId) {
+          const prevEl = document.getElementById(previewImgId);
+          if (prevEl) {
+            prevEl.src = dataUrl;
+            prevEl.classList.remove('hidden');
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderAll() {
+      // In standalone admin, renderAll refreshes the dashboard view & saves draft
+      populateAdminViews();
+      persistDraft();
+    }
+    // =================================================================
+    // ================= ADMIN DASHBOARD FUNCTIONALITY =================
+    // =================================================================
+
+    function openAdminModal() {
+      document.getElementById('admin-modal').classList.remove('hidden');
+      populateAdminViews();
+      lucide.createIcons();
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').classList.add('hidden');
+    }
+
+    function switchAdminSubTab(tabName) {
+      document.querySelectorAll('.admin-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+
+      const p = document.getElementById(`admin-panel-${tabName}`);
+      if (p) p.classList.remove('hidden');
+      const b = document.getElementById(`admin-tab-${tabName}`);
+      if (b) b.classList.add('active');
+      lucide.createIcons();
+    }
+
+    function populateAdminViews() {
+      autoMigrateImagePaths(siteData);
+      // 1. Team: PI
+      const pi = siteData.team.pi;
+      document.getElementById('admin-pi-name').value = pi.name || '';
+      document.getElementById('admin-pi-role').value = pi.role || 'Principal Investigator';
+      document.getElementById('admin-pi-email').value = pi.email || '';
+      document.getElementById('admin-pi-photo').value = pi.photo || '';
+      document.getElementById('admin-pi-photo-preview').src = pi.photo || './images/team/ariel_chipman.jpg';
+      document.getElementById('admin-pi-bio').value = pi.bio || '';
+      const piSoc = pi.socials || {};
+      document.getElementById('admin-pi-scholar').value = piSoc.scholar || '';
+      document.getElementById('admin-pi-orcid').value = piSoc.orcid || '';
+      document.getElementById('admin-pi-researchgate').value = piSoc.researchgate || '';
+      document.getElementById('admin-pi-twitter').value = piSoc.twitter || '';
+      document.getElementById('admin-pi-linkedin').value = piSoc.linkedin || '';
+
+      // Current members
+      document.getElementById('admin-member-count').innerText = siteData.team.current.length;
+      document.getElementById('admin-members-list').innerHTML = siteData.team.current.map((m, idx) => `
+        <div class="p-4 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <img loading="lazy" decoding="async" src="${m.photo || './images/team/placeholder_member.png'}" class="w-12 h-12 rounded-lg object-cover border border-slate-200">
+            <div>
+              <p class="font-bold text-slate-900 text-sm">${m.name}</p>
+              <p class="text-xs text-chipman-orange font-semibold">${m.role}</p>
+              ${m.socials && Object.values(m.socials).some(Boolean) ? `<span class="text-[10px] text-emerald-600 font-semibold">● Has custom social links</span>` : ''}
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="moveMember(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Up">↑</button>
+            <button onclick="moveMember(${idx}, 1)" ${idx === siteData.team.current.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Down">↓</button>
+            <button onclick="editMember(${idx})" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">Edit</button>
+            <button onclick="deleteMember(${idx})" class="px-2.5 py-1 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded font-medium">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Alumni
+      document.getElementById('admin-alumni-list').innerHTML = siteData.team.alumni.map((a, idx) => `
+        <div class="p-3 flex items-center justify-between text-xs">
+          <span><strong>${a.name}</strong> (${a.degree})</span>
+          <div class="flex items-center gap-1.5">
+            <button onclick="moveAlum(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-0.5 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-0.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Up">↑</button>
+            <button onclick="moveAlum(${idx}, 1)" ${idx === siteData.team.alumni.length - 1 ? 'disabled class="px-2 py-0.5 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-0.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Down">↓</button>
+            <button onclick="deleteAlum(${idx})" class="text-red-500 hover:text-red-700 font-medium ml-1">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      // 2. Home Approaches
+      const appCountEl = document.getElementById('admin-approaches-count');
+      if (appCountEl) appCountEl.innerText = siteData.homeApproaches.length;
+      const appListEl = document.getElementById('admin-approaches-list');
+      if (appListEl) {
+        appListEl.innerHTML = siteData.homeApproaches.map((app, idx) => `
+          <div class="bg-white rounded-xl p-4 border border-slate-200 space-y-2 shadow-sm flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="w-7 h-7 rounded-full bg-orange-100 text-chipman-orange font-bold text-xs flex items-center justify-center">${app.num}</span>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="moveApproach(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-0.5 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-0.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Earlier">↑</button>
+                  <button onclick="moveApproach(${idx}, 1)" ${idx === siteData.homeApproaches.length - 1 ? 'disabled class="px-2 py-0.5 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-0.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Later">↓</button>
+                  <button onclick="editApproach(${idx})" class="px-2 py-0.5 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">Edit</button>
+                  <button onclick="deleteApproach(${idx})" class="px-2 py-0.5 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded font-medium">Delete</button>
+                </div>
+              </div>
+              <h5 class="font-bold text-slate-900 text-sm leading-snug">${app.title}</h5>
+              <p class="text-xs text-slate-500">${(app.projects || []).length} current sub-projects</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 3. Research Projects & Intro
+      const rIntroEl = document.getElementById('admin-research-intro');
+      if (rIntroEl) rIntroEl.value = siteData.researchIntro || '';
+      document.getElementById('admin-research-count').innerText = siteData.researchProjects.length;
+      document.getElementById('admin-research-list').innerHTML = siteData.researchProjects.map((p, idx) => `
+        <div class="p-4 flex items-start justify-between gap-4">
+          <div class="space-y-1 max-w-2xl">
+            <h5 class="font-bold text-slate-900 text-sm">${formatRichText(p.title)}</h5>
+            <p class="text-xs text-slate-600 line-clamp-2">${formatRichText(p.description)}</p>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="moveResearchProject(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Earlier">↑</button>
+            <button onclick="moveResearchProject(${idx}, 1)" ${idx === siteData.researchProjects.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Later">↓</button>
+            <button onclick="editResearchProject(${idx})" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">Edit</button>
+            <button onclick="deleteResearchProject(${idx})" class="px-2.5 py-1 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded font-medium">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      // 4. Publications
+      document.getElementById('admin-pub-count').innerText = siteData.publications.length;
+      document.getElementById('admin-publications-list').innerHTML = siteData.publications.map((p, idx) => `
+        <div class="p-4 flex items-start justify-between gap-4">
+          <div class="space-y-1">
+            <h5 class="font-bold text-slate-900 text-sm">${formatRichText(p.title)}</h5>
+            <p class="text-xs text-slate-500">${p.authors} • <em>${p.journal}</em> (${p.year})</p>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="movePublication(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Earlier">↑</button>
+            <button onclick="movePublication(${idx}, 1)" ${idx === siteData.publications.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Later">↓</button>
+            <button onclick="editPublication(${idx})" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">Edit</button>
+            <button onclick="deletePublication(${idx})" class="px-2.5 py-1 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded font-medium">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      // 5. Gallery
+      renderAdminGallerySections();
+
+      // 6. News
+      document.getElementById('admin-news-list').innerHTML = siteData.news.map((item, idx) => `
+        <div class="p-4 flex items-start justify-between gap-4">
+          <div class="space-y-1">
+            <h5 class="font-bold text-slate-900 text-sm">${formatRichText(item.title)}</h5>
+            <p class="text-xs text-slate-600">${formatRichText(item.summary)}</p>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="moveNewsItem(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Earlier">↑</button>
+            <button onclick="moveNewsItem(${idx}, 1)" ${idx === siteData.news.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Later">↓</button>
+            <button onclick="editNewsItem(${idx})" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">Edit</button>
+            <button onclick="deleteNewsItem(${idx})" class="px-2.5 py-1 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded font-medium">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+      // 7. Banners & Branding
+      const hb = siteData.labInfo?.headerBanners || {};
+      const setBannerField = (type, val) => {
+        const inp = document.getElementById(`admin-banner-${type}-input`);
+        const prev = document.getElementById(`admin-banner-${type}-preview`);
+        if (inp) inp.value = val || '';
+        if (prev && val) prev.src = val;
+      };
+      const logoVal = siteData.labInfo?.logos?.labLogo || './images/logos/lab_logo.png';
+      setBannerField('logo', logoVal);
+      setBannerField('huji', siteData.labInfo?.logos?.hujiLogo || './images/logos/huji_logo.png');
+      setBannerField('home', hb.home);
+      setBannerField('research', hb.research);
+      setBannerField('group', hb.group);
+      setBannerField('publications', hb.publications);
+      setBannerField('gallery', hb.gallery);
+      setBannerField('news', hb.news);
+      setBannerField('contact', hb.contact);
+
+      // 8. General & Contact
+      document.getElementById('admin-info-labName').value = siteData.labInfo.labName || '';
+      document.getElementById('admin-info-labSubtitle').value = siteData.labInfo.labSubtitle || '';
+      document.getElementById('admin-info-contactEmail').value = siteData.labInfo.contactEmail || '';
+      document.getElementById('admin-info-phone').value = siteData.labInfo.phone || '';
+      document.getElementById('admin-info-labLocation').value = siteData.labInfo.labLocation || '';
+      document.getElementById('admin-info-mapUrl').value = siteData.labInfo.mapUrl || '';
+      const lsUrlEl = document.getElementById('admin-info-lifeSciencesUrl');
+      if (lsUrlEl) lsUrlEl.value = siteData.labInfo?.links?.lifeSciencesUrl || 'https://www.bio.huji.ac.il/en';
+      document.getElementById('admin-info-overview').value = siteData.labInfo.overview || '';
+
+      // 9. Navigation & Custom Sections
+      renderAdminNavigationList();
+      renderAdminCustomSectionsList();
+
+      lucide.createIcons();
+    }
+
+    // Modal helpers
+    function openSubModal(title, formHtml, onSave) {
+      document.getElementById('sub-modal-title').innerText = title;
+      document.getElementById('sub-modal-form').innerHTML = formHtml;
+      document.getElementById('sub-modal-save-btn').onclick = () => {
+        onSave();
+        closeSubModal();
+        populateAdminViews();
+        renderAll();
+      };
+      document.getElementById('sub-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const sm = document.getElementById('sub-modal');
+        if (sm && !sm.classList.contains('hidden')) {
+          closeSubModal();
+        }
+      }
+    });
+
+    function closeSubModal() {
+      document.getElementById('sub-modal').classList.add('hidden');
+    }
+
+    // MEMBER CRUD
+    function openAddMemberModal() {
+      openSubModal('Add New Lab Member', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+          <input type="text" id="m-name" required placeholder="e.g. Dana Cohen" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Role / Degree *</label>
+          <input type="text" id="m-role" placeholder="e.g. PhD Student, Post-Doctoral Fellow, MSc Student" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Photo</label>
+          <div class="flex items-center gap-3">
+            <img id="m-preview" src="./images/team/placeholder_member.png" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="m-photo" placeholder="./images/... or choose local file" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'm-photo', 'm-preview')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Email (optional)</label>
+          <input type="email" id="m-email" placeholder="name@mail.huji.ac.il" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Project Summary / Bio *</label>
+          <textarea id="m-bio" rows="3" placeholder="Summary of research focus..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"></textarea>
+        </div>
+        <div class="border-t border-slate-200 pt-3 space-y-2">
+          <p class="text-xs font-bold text-slate-700">Social Links (Leave empty to omit — links only appear if provided)</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">Twitter / X URL</label>
+              <input type="url" id="m-twitter" placeholder="https://twitter.com/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">LinkedIn URL</label>
+              <input type="url" id="m-linkedin" placeholder="https://linkedin.com/in/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">ORCID URL</label>
+              <input type="url" id="m-orcid" placeholder="https://orcid.org/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">Google Scholar URL</label>
+              <input type="url" id="m-scholar" placeholder="https://scholar.google.com/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] text-slate-500 mb-0.5">ResearchGate URL</label>
+              <input type="url" id="m-researchgate" placeholder="https://www.researchgate.net/profile/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+          </div>
+        </div>
+      `, () => {
+        const name = document.getElementById('m-name').value.trim();
+        const role = document.getElementById('m-role').value.trim();
+        const photo = document.getElementById('m-photo').value.trim() || './images/team/placeholder_member.png';
+        const email = document.getElementById('m-email').value.trim();
+        const bio = document.getElementById('m-bio').value.trim();
+        const twitter = document.getElementById('m-twitter').value.trim();
+        const linkedin = document.getElementById('m-linkedin').value.trim();
+        const orcid = document.getElementById('m-orcid').value.trim();
+        const scholar = document.getElementById('m-scholar').value.trim();
+        const researchgate = document.getElementById('m-researchgate').value.trim();
+        
+        const socials = {};
+        if (twitter) socials.twitter = twitter;
+        if (linkedin) socials.linkedin = linkedin;
+        if (orcid) socials.orcid = orcid;
+        if (scholar) socials.scholar = scholar;
+        if (researchgate) socials.researchgate = researchgate;
+
+        if (name && role) {
+          siteData.team.current.push({ name, role, photo, email, bio, socials });
+        }
+      });
+    }
+
+    function editMember(idx) {
+      const m = siteData.team.current[idx];
+      const soc = m.socials || {};
+      openSubModal('Edit Lab Member', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+          <input type="text" id="m-name" value="${m.name || ''}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Role</label>
+          <input type="text" id="m-role" value="${m.role || ''}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Photo</label>
+          <div class="flex items-center gap-3">
+            <img id="m-preview" src="${m.photo || './images/team/placeholder_member.png'}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="m-photo" value="${m.photo || ''}" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'm-photo', 'm-preview')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
+          <input type="email" id="m-email" value="${m.email || ''}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Bio / Research</label>
+          <textarea id="m-bio" rows="4" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">${m.bio || ''}</textarea>
+        </div>
+        <div class="border-t border-slate-200 pt-3 space-y-2">
+          <p class="text-xs font-bold text-slate-700">Social Links (Leave empty to omit — links only appear if provided)</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">Twitter / X URL</label>
+              <input type="url" id="m-twitter" value="${soc.twitter || ''}" placeholder="https://twitter.com/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">LinkedIn URL</label>
+              <input type="url" id="m-linkedin" value="${soc.linkedin || ''}" placeholder="https://linkedin.com/in/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">ORCID URL</label>
+              <input type="url" id="m-orcid" value="${soc.orcid || ''}" placeholder="https://orcid.org/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">Google Scholar URL</label>
+              <input type="url" id="m-scholar" value="${soc.scholar || ''}" placeholder="https://scholar.google.com/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] text-slate-500 mb-0.5">ResearchGate URL</label>
+              <input type="url" id="m-researchgate" value="${soc.researchgate || ''}" placeholder="https://www.researchgate.net/profile/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+          </div>
+        </div>
+      `, () => {
+        m.name = document.getElementById('m-name').value.trim();
+        m.role = document.getElementById('m-role').value.trim();
+        m.photo = document.getElementById('m-photo').value.trim();
+        m.email = document.getElementById('m-email').value.trim();
+        m.bio = document.getElementById('m-bio').value.trim();
+        
+        const twitter = document.getElementById('m-twitter').value.trim();
+        const linkedin = document.getElementById('m-linkedin').value.trim();
+        const orcid = document.getElementById('m-orcid').value.trim();
+        const scholar = document.getElementById('m-scholar').value.trim();
+        const researchgate = document.getElementById('m-researchgate').value.trim();
+        
+        m.socials = {};
+        if (twitter) m.socials.twitter = twitter;
+        if (linkedin) m.socials.linkedin = linkedin;
+        if (orcid) m.socials.orcid = orcid;
+        if (scholar) m.socials.scholar = scholar;
+        if (researchgate) m.socials.researchgate = researchgate;
+      });
+    }
+
+    function deleteMember(idx) {
+      if (confirm(`Remove ${siteData.team.current[idx].name}?`)) {
+        siteData.team.current.splice(idx, 1);
+        renderAll();
+      }
+    }
+
+    function moveMember(idx, direction) {
+      if (!siteData.team || !siteData.team.current) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.team.current.length) return;
+      const temp = siteData.team.current[idx];
+      siteData.team.current[idx] = siteData.team.current[targetIdx];
+      siteData.team.current[targetIdx] = temp;
+      renderAll();
+    }
+
+    // ALUMNI CRUD
+    function openAddAlumModal() {
+      openSubModal('Add Alumni', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Name</label>
+          <input type="text" id="a-name" placeholder="e.g. Dana Cohen" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Degree & Year</label>
+          <input type="text" id="a-degree" placeholder="e.g. M.Sc 2023 or Ph.D 2024" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+      `, () => {
+        const name = document.getElementById('a-name').value.trim();
+        const degree = document.getElementById('a-degree').value.trim();
+        if (name && degree) {
+          siteData.team.alumni.push({ name, degree });
+        }
+      });
+    }
+
+    function deleteAlum(idx) {
+      siteData.team.alumni.splice(idx, 1);
+      renderAll();
+    }
+
+    function moveAlum(idx, direction) {
+      if (!siteData.team || !siteData.team.alumni) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.team.alumni.length) return;
+      const temp = siteData.team.alumni[idx];
+      siteData.team.alumni[idx] = siteData.team.alumni[targetIdx];
+      siteData.team.alumni[targetIdx] = temp;
+      renderAll();
+    }
+
+    // HOME APPROACHES CRUD
+    function openAddApproachModal() {
+      openSubModal('Add Home Approach', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Approach Number *</label>
+          <input type="text" id="app-num" value="${(siteData.homeApproaches.length + 1)}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Approach Title *</label>
+          <input type="text" id="app-title" placeholder="e.g. Evo-devo of the arthropod body plan" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Project Bullet Points (one per line) *</label>
+          <textarea id="app-projects" rows="5" placeholder="Bullet point 1&#10;Bullet point 2" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"></textarea>
+        </div>
+      `, () => {
+        const num = document.getElementById('app-num').value.trim();
+        const title = document.getElementById('app-title').value.trim();
+        const projects = document.getElementById('app-projects').value.split('\n').map(s => s.trim()).filter(Boolean);
+        if (title) {
+          siteData.homeApproaches.push({ num, title, projects });
+        }
+      });
+    }
+
+    function editApproach(idx) {
+      const app = siteData.homeApproaches[idx];
+      openSubModal('Edit Home Approach', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Approach Number</label>
+          <input type="text" id="app-num" value="${app.num || ''}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Approach Title</label>
+          <input type="text" id="app-title" value="${app.title || ''}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Project Bullet Points (one per line)</label>
+          <textarea id="app-projects" rows="6" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">${(app.projects || []).join('\n')}</textarea>
+        </div>
+      `, () => {
+        app.num = document.getElementById('app-num').value.trim();
+        app.title = document.getElementById('app-title').value.trim();
+        app.projects = document.getElementById('app-projects').value.split('\n').map(s => s.trim()).filter(Boolean);
+      });
+    }
+
+    function deleteApproach(idx) {
+      if (confirm(`Remove approach "${siteData.homeApproaches[idx].title}"?`)) {
+        siteData.homeApproaches.splice(idx, 1);
+        populateAdminViews();
+        renderAll();
+      }
+    }
+
+    // PUBLICATION CRUD
+    function openAddPubModal() {
+      openSubModal('Add Publication', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Article Title *</label>
+          <input type="text" id="p-title" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Authors *</label>
+          <input type="text" id="p-authors" placeholder="Author 1, Author 2, Chipman, A. D." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Journal *</label>
+            <input type="text" id="p-journal" placeholder="e.g. Nature Communications" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Year *</label>
+            <input type="number" id="p-year" value="${new Date().getFullYear()}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">DOI or Article Link</label>
+          <input type="url" id="p-link" placeholder="https://doi.org/..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+      `, () => {
+        const title = document.getElementById('p-title').value.trim();
+        const authors = document.getElementById('p-authors').value.trim();
+        const journal = document.getElementById('p-journal').value.trim();
+        const year = parseInt(document.getElementById('p-year').value) || new Date().getFullYear();
+        const link = document.getElementById('p-link').value.trim();
+        if (title && journal) {
+          siteData.publications.unshift({ title, authors, journal, year, link });
+        }
+      });
+    }
+
+    function editPublication(idx) {
+      const p = siteData.publications[idx];
+      openSubModal('Edit Publication', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Title</label>
+          <input type="text" id="p-title" value="${p.title}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Authors</label>
+          <input type="text" id="p-authors" value="${p.authors}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Journal</label>
+            <input type="text" id="p-journal" value="${p.journal}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Year</label>
+            <input type="number" id="p-year" value="${p.year}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Link / DOI</label>
+          <input type="url" id="p-link" value="${p.link || ''}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+      `, () => {
+        p.title = document.getElementById('p-title').value.trim();
+        p.authors = document.getElementById('p-authors').value.trim();
+        p.journal = document.getElementById('p-journal').value.trim();
+        p.year = parseInt(document.getElementById('p-year').value) || p.year;
+        p.link = document.getElementById('p-link').value.trim();
+      });
+    }
+
+    function deletePublication(idx) {
+      if (confirm(`Remove publication "${siteData.publications[idx].title}"?`)) {
+        siteData.publications.splice(idx, 1);
+        populateAdminViews();
+        renderAll();
+      }
+    }
+
+    // RESEARCH PROJECT CRUD
+    function updateResearchIntro() {
+      siteData.researchIntro = document.getElementById('admin-research-intro').value.trim();
+      const el = document.getElementById('research-intro-display');
+      if (el) el.innerText = siteData.researchIntro;
+      persistDraft();
+      alert('Research page lead text updated!');
+    }
+
+    function openAddProjectModal() {
+      openSubModal('Add Research Project', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Project Title *</label>
+          <input type="text" id="r-title" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Description *</label>
+          <textarea id="r-desc" rows="4" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Organisms (comma separated)</label>
+          <input type="text" id="r-orgs" placeholder="Oncopeltus fasciatus, Blattella germanica" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+      `, () => {
+        const title = document.getElementById('r-title').value.trim();
+        const description = document.getElementById('r-desc').value.trim();
+        const orgs = document.getElementById('r-orgs').value.split(',').map(s => s.trim()).filter(Boolean);
+        if (title && description) {
+          siteData.researchProjects.push({ id: 'proj-' + Date.now(), title, description, organisms: orgs });
+        }
+      });
+    }
+
+    function editResearchProject(idx) {
+      const p = siteData.researchProjects[idx];
+      openSubModal('Edit Research Project', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Title</label>
+          <input type="text" id="r-title" value="${p.title}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Description</label>
+          <textarea id="r-desc" rows="4" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">${p.description}</textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Organisms (comma separated)</label>
+          <input type="text" id="r-orgs" value="${(p.organisms || []).join(', ')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+      `, () => {
+        p.title = document.getElementById('r-title').value.trim();
+        p.description = document.getElementById('r-desc').value.trim();
+        p.organisms = document.getElementById('r-orgs').value.split(',').map(s => s.trim()).filter(Boolean);
+      });
+    }
+
+    function deleteResearchProject(idx) {
+      if (confirm(`Remove project "${siteData.researchProjects[idx].title}"?`)) {
+        siteData.researchProjects.splice(idx, 1);
+        populateAdminViews();
+        renderAll();
+      }
+    }
+
+    // ================= GALLERY SUB-SECTIONS & PHOTOS CRUD =================
+    function ensureGallerySections() {
+      if (!siteData.gallery) siteData.gallery = { sections: [] };
+      if (Array.isArray(siteData.gallery.sections)) return;
+
+      // Migrate legacy animals/activities structure
+      const sections = [];
+      if (Array.isArray(siteData.gallery.animals)) {
+        sections.push({
+          id: 'animals',
+          title: 'Lab Animals',
+          description: 'Specimens, laboratory culture models, and developmental stages',
+          layout: 'grid-3',
+          items: siteData.gallery.animals
+        });
+      }
+      if (Array.isArray(siteData.gallery.activities)) {
+        sections.push({
+          id: 'activities',
+          title: 'Lab Activities',
+          description: 'Lab gatherings, fieldwork, and team moments',
+          layout: 'grid-4',
+          items: siteData.gallery.activities
+        });
+      }
+      siteData.gallery = { sections };
+    }
+
+    function renderAdminGallerySections() {
+      ensureGallerySections();
+      const container = document.getElementById('admin-gallery-sections-list');
+      if (!container) return;
+
+      const sections = siteData.gallery.sections || [];
+      if (sections.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-10 text-center text-slate-400 text-xs border border-dashed border-slate-300 space-y-2">
+            <p>No gallery sub-sections yet.</p>
+            <p class="text-slate-500">Click <strong>"Add Sub-Section"</strong> above to create your first album (e.g. Lab Animals, Fieldwork, Conferences).</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sections.map((sec, secIdx) => {
+        const items = sec.items || [];
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-5 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="font-bold text-slate-900 text-base sm:text-lg">${sec.title}</h4>
+                  <span class="text-xs font-mono text-slate-400">#${sec.id}</span>
+                  <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">${items.length} photo(s)</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">${sec.description || 'No description provided.'}</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="openAddPhotoModal(${secIdx})" class="px-3 py-1.5 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1 shadow-sm transition">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>Add Photo</span>
+                </button>
+                <button onclick="openEditGallerySectionModal(${secIdx})" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg inline-flex items-center gap-1 transition">
+                  <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                  <span>Edit Section</span>
+                </button>
+                <button onclick="moveGallerySection(${secIdx}, -1)" ${secIdx === 0 ? 'disabled class="px-2 py-1.5 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition"'}>
+                  ↑
+                </button>
+                <button onclick="moveGallerySection(${secIdx}, 1)" ${secIdx === sections.length - 1 ? 'disabled class="px-2 py-1.5 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition"'}>
+                  ↓
+                </button>
+                <button onclick="deleteGallerySection(${secIdx})" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg transition">
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            <!-- Photos Grid -->
+            ${items.length === 0 ? `
+              <div class="py-8 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl">
+                No photos in this sub-section yet. Click "Add Photo" above.
+              </div>
+            ` : `
+              <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                ${items.map((item, itemIdx) => `
+                  <div class="relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-50 flex flex-col justify-between shadow-xs">
+                    <div class="aspect-square w-full bg-slate-200 overflow-hidden relative">
+                      <img loading="lazy" decoding="async" src="${item.image}" alt="${item.title || ''}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 space-y-1">
+                      <h5 class="text-[11px] font-bold text-slate-800 truncate" title="${item.title || ''}">${item.title || 'Untitled'}</h5>
+                      ${item.caption ? `<p class="text-[10px] text-slate-400 truncate" title="${item.caption}">${item.caption}</p>` : ''}
+                      <div class="flex items-center justify-between pt-1.5 border-t border-slate-200/60">
+                        <div class="flex items-center gap-1">
+                          <button onclick="moveGalleryPhoto(${secIdx}, ${itemIdx}, -1)" ${itemIdx === 0 ? 'disabled class="px-1 py-0.5 text-[10px] bg-slate-200/50 text-slate-300 rounded cursor-not-allowed"' : 'class="px-1 py-0.5 text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-bold transition"'} title="Move Earlier">←</button>
+                          <button onclick="moveGalleryPhoto(${secIdx}, ${itemIdx}, 1)" ${itemIdx === items.length - 1 ? 'disabled class="px-1 py-0.5 text-[10px] bg-slate-200/50 text-slate-300 rounded cursor-not-allowed"' : 'class="px-1 py-0.5 text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-bold transition"'} title="Move Later">→</button>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                          <button onclick="editGalleryPhoto(${secIdx}, ${itemIdx})" class="text-[10px] text-slate-600 hover:text-slate-900 font-semibold underline">Edit</button>
+                          <button onclick="deleteGalleryPhoto(${secIdx}, ${itemIdx})" class="text-[10px] text-red-600 hover:text-red-800 font-semibold">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function openAddGallerySectionModal() {
+      openSubModal('Add New Gallery Sub-Section', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Sub-Section Title *</label>
+          <input type="text" id="gs-title" placeholder="e.g. Fieldwork 2024, Microscopy, Conferences" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Description / Subtitle</label>
+          <input type="text" id="gs-desc" placeholder="e.g. Expeditions, live collection trips and habitat shots" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Display Layout</label>
+          <select id="gs-layout" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white">
+            <option value="grid-3">3 Columns (Standard)</option>
+            <option value="grid-4">4 Columns (Compact)</option>
+            <option value="grid-2">2 Columns (Large Cards)</option>
+          </select>
+        </div>
+      `, () => {
+        const title = document.getElementById('gs-title').value.trim();
+        if (!title) return alert('Sub-section title is required.');
+        const description = document.getElementById('gs-desc').value.trim();
+        const layout = document.getElementById('gs-layout').value;
+
+        ensureGallerySections();
+        const baseId = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'gallery';
+        let uniqueId = baseId;
+        let counter = 1;
+        while (siteData.gallery.sections.some(s => s.id === uniqueId)) {
+          uniqueId = `${baseId}-${counter++}`;
+        }
+
+        siteData.gallery.sections.push({
+          id: uniqueId,
+          title,
+          description,
+          layout,
+          items: []
+        });
+
+        renderAll();
+      });
+    }
+
+    function openEditGallerySectionModal(secIdx) {
+      ensureGallerySections();
+      const sec = siteData.gallery.sections[secIdx];
+      if (!sec) return;
+
+      openSubModal(`Edit Sub-Section: ${sec.title}`, `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Sub-Section Title *</label>
+          <input type="text" id="gs-title" value="${(sec.title || '').replace(/"/g, '&quot;')}" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Description / Subtitle</label>
+          <input type="text" id="gs-desc" value="${(sec.description || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Display Layout</label>
+          <select id="gs-layout" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white">
+            <option value="grid-3" ${sec.layout === 'grid-3' ? 'selected' : ''}>3 Columns (Standard)</option>
+            <option value="grid-4" ${sec.layout === 'grid-4' ? 'selected' : ''}>4 Columns (Compact)</option>
+            <option value="grid-2" ${sec.layout === 'grid-2' ? 'selected' : ''}>2 Columns (Large Cards)</option>
+          </select>
+        </div>
+      `, () => {
+        const title = document.getElementById('gs-title').value.trim();
+        if (!title) return alert('Sub-section title is required.');
+        sec.title = title;
+        sec.description = document.getElementById('gs-desc').value.trim();
+        sec.layout = document.getElementById('gs-layout').value;
+        renderAll();
+      });
+    }
+
+    function moveGallerySection(secIdx, direction) {
+      ensureGallerySections();
+      const targetIdx = secIdx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.gallery.sections.length) return;
+      const temp = siteData.gallery.sections[secIdx];
+      siteData.gallery.sections[secIdx] = siteData.gallery.sections[targetIdx];
+      siteData.gallery.sections[targetIdx] = temp;
+      renderAll();
+    }
+
+    function deleteGallerySection(secIdx) {
+      ensureGallerySections();
+      const sec = siteData.gallery.sections[secIdx];
+      if (confirm(`Delete sub-section "${sec.title}" and all its photos?`)) {
+        siteData.gallery.sections.splice(secIdx, 1);
+        renderAll();
+      }
+    }
+
+    function openAddPhotoModal(secIdx) {
+      ensureGallerySections();
+      const sec = siteData.gallery.sections[secIdx];
+      if (!sec) return;
+
+      openSubModal(`Add Photo to ${sec.title}`, `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Image Picture *</label>
+          <div class="flex items-center gap-3">
+            <img id="g-preview" src="./images/team/placeholder_member.png" class="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="g-image" placeholder="./images/... or choose local file" required class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'g-image', 'g-preview')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Title *</label>
+          <input type="text" id="g-title" required placeholder="e.g. Oncopeltus nymph or Fieldwork specimen" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Caption / Details (optional)</label>
+          <input type="text" id="g-caption" placeholder="e.g. Dorsal view or Mount Hermon expedition" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+      `, () => {
+        const image = document.getElementById('g-image').value.trim();
+        const title = document.getElementById('g-title').value.trim();
+        const caption = document.getElementById('g-caption').value.trim();
+        if (image && title) {
+          if (!sec.items) sec.items = [];
+          sec.items.push({ image, title, caption });
+        }
+      });
+    }
+
+    function editGalleryPhoto(secIdx, itemIdx) {
+      ensureGallerySections();
+      const sec = siteData.gallery.sections[secIdx];
+      if (!sec || !sec.items || !sec.items[itemIdx]) return;
+      const item = sec.items[itemIdx];
+
+      openSubModal(`Edit Photo in ${sec.title}`, `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Image Picture</label>
+          <div class="flex items-center gap-3">
+            <img id="g-preview" src="${item.image || './images/team/placeholder_member.png'}" class="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="g-image" value="${item.image || ''}" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'g-image', 'g-preview')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Title</label>
+          <input type="text" id="g-title" value="${(item.title || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Caption / Details</label>
+          <input type="text" id="g-caption" value="${(item.caption || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+      `, () => {
+        item.image = document.getElementById('g-image').value.trim();
+        item.title = document.getElementById('g-title').value.trim();
+        item.caption = document.getElementById('g-caption').value.trim();
+      });
+    }
+
+    function deleteGalleryPhoto(secIdx, itemIdx) {
+      ensureGallerySections();
+      const sec = siteData.gallery.sections[secIdx];
+      if (!sec || !sec.items) return;
+      sec.items.splice(itemIdx, 1);
+      renderAll();
+    }
+
+    // NEWS CRUD
+    function openAddNewsModal() {
+      openSubModal('Add Event / News Update', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Event Title *</label>
+          <input type="text" id="n-title" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Summary / Details *</label>
+          <textarea id="n-summary" rows="4" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"></textarea>
+        </div>
+      `, () => {
+        const title = document.getElementById('n-title').value.trim();
+        const summary = document.getElementById('n-summary').value.trim();
+        if (title && summary) {
+          siteData.news.unshift({ title, summary });
+        }
+      });
+    }
+
+    function editNewsItem(idx) {
+      const item = siteData.news[idx];
+      openSubModal('Edit News Event', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Event Title *</label>
+          <input type="text" id="n-title" value="${item.title || ''}" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Summary / Details *</label>
+          <textarea id="n-summary" rows="4" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">${item.summary || ''}</textarea>
+        </div>
+      `, () => {
+        item.title = document.getElementById('n-title').value.trim();
+        item.summary = document.getElementById('n-summary').value.trim();
+      });
+    }
+
+    function deleteNewsItem(idx) {
+      siteData.news.splice(idx, 1);
+      populateAdminViews();
+      renderAll();
+    }
+
+    // BANNERS & LOGOS UPDATE
+    function updateBannersAndLogos() {
+      if (!siteData.labInfo) siteData.labInfo = {};
+      if (!siteData.labInfo.logos) siteData.labInfo.logos = {};
+      if (!siteData.labInfo.headerBanners) siteData.labInfo.headerBanners = {};
+
+      const logoVal = document.getElementById('admin-banner-logo-input')?.value.trim();
+      if (logoVal) siteData.labInfo.logos.labLogo = logoVal;
+
+      const hujiInp = document.getElementById('admin-banner-huji-input');
+      if (hujiInp && hujiInp.value.trim()) siteData.labInfo.logos.hujiLogo = hujiInp.value.trim();
+
+      siteData.labInfo.headerBanners.home = document.getElementById('admin-banner-home-input').value.trim();
+      siteData.labInfo.headerBanners.research = document.getElementById('admin-banner-research-input').value.trim();
+      siteData.labInfo.headerBanners.group = document.getElementById('admin-banner-group-input').value.trim();
+      siteData.labInfo.headerBanners.publications = document.getElementById('admin-banner-publications-input').value.trim();
+      siteData.labInfo.headerBanners.gallery = document.getElementById('admin-banner-gallery-input').value.trim();
+      siteData.labInfo.headerBanners.news = document.getElementById('admin-banner-news-input').value.trim();
+      siteData.labInfo.headerBanners.contact = document.getElementById('admin-banner-contact-input').value.trim();
+
+      autoMigrateImagePaths(siteData);
+      renderAll();
+      alert('Hero Banners & Branding updated successfully!');
+    }
+
+    // PI INFO & SOCIALS UPDATE
+    function updatePIInfo() {
+      siteData.team.pi.name = document.getElementById('admin-pi-name').value.trim();
+      siteData.team.pi.role = document.getElementById('admin-pi-role').value.trim();
+      siteData.team.pi.email = document.getElementById('admin-pi-email').value.trim();
+      siteData.team.pi.photo = document.getElementById('admin-pi-photo').value.trim();
+      siteData.team.pi.bio = document.getElementById('admin-pi-bio').value.trim();
+
+      if (!siteData.team.pi.socials) siteData.team.pi.socials = {};
+      siteData.team.pi.socials.scholar = document.getElementById('admin-pi-scholar').value.trim();
+      siteData.team.pi.socials.orcid = document.getElementById('admin-pi-orcid').value.trim();
+      siteData.team.pi.socials.researchgate = document.getElementById('admin-pi-researchgate').value.trim();
+      siteData.team.pi.socials.twitter = document.getElementById('admin-pi-twitter').value.trim();
+      siteData.team.pi.socials.linkedin = document.getElementById('admin-pi-linkedin').value.trim();
+      if (!siteData.labInfo) siteData.labInfo = {};
+      if (!siteData.labInfo.links) siteData.labInfo.links = {};
+      if (siteData.team.pi.socials.scholar) siteData.labInfo.links.googleScholar = siteData.team.pi.socials.scholar;
+      if (siteData.team.pi.socials.orcid) siteData.labInfo.links.orcid = siteData.team.pi.socials.orcid;
+      if (siteData.team.pi.socials.researchgate) siteData.labInfo.links.researchGate = siteData.team.pi.socials.researchgate;
+
+      autoMigrateImagePaths(siteData);
+      renderAll();
+      alert('PI Information and Socials updated!');
+    }
+
+    // GENERAL INFO UPDATES
+    function updateGeneralInfo() {
+      siteData.labInfo.labName = document.getElementById('admin-info-labName').value.trim();
+      siteData.labInfo.labSubtitle = document.getElementById('admin-info-labSubtitle').value.trim();
+      siteData.labInfo.contactEmail = document.getElementById('admin-info-contactEmail').value.trim();
+      siteData.labInfo.phone = document.getElementById('admin-info-phone').value.trim();
+      siteData.labInfo.labLocation = document.getElementById('admin-info-labLocation').value.trim();
+      siteData.labInfo.mapUrl = document.getElementById('admin-info-mapUrl').value.trim();
+      if (!siteData.labInfo.links) siteData.labInfo.links = {};
+      const lsInp = document.getElementById('admin-info-lifeSciencesUrl');
+      if (lsInp) siteData.labInfo.links.lifeSciencesUrl = lsInp.value.trim() || 'https://www.bio.huji.ac.il/en';
+      siteData.labInfo.overview = document.getElementById('admin-info-overview').value.trim();
+
+      renderAll();
+      alert('General lab information updated!');
+    }
+
+    // ================= NAVIGATION & SECTIONS CRUD =================
+    const DEFAULT_ADMIN_NAV = [
+      { id: 'home', label: 'Home', enabled: true, isCustom: false },
+      { id: 'research', label: 'Research', enabled: true, isCustom: false },
+      { id: 'group', label: 'Group', enabled: true, isCustom: false },
+      { id: 'publications', label: 'Publications', enabled: true, isCustom: false },
+      { id: 'gallery', label: 'Gallery', enabled: true, isCustom: false },
+      { id: 'news', label: 'What’s happening', enabled: true, isCustom: false },
+      { id: 'contact', label: 'Contact', enabled: true, isCustom: false }
+    ];
+
+    function ensureNavigationData() {
+      if (!siteData.navigation || !Array.isArray(siteData.navigation) || siteData.navigation.length === 0) {
+        siteData.navigation = JSON.parse(JSON.stringify(DEFAULT_ADMIN_NAV));
+      } else {
+        DEFAULT_ADMIN_NAV.forEach(def => {
+          if (!siteData.navigation.some(item => item.id === def.id)) {
+            siteData.navigation.push(JSON.parse(JSON.stringify(def)));
+          }
+        });
+      }
+      if (!siteData.customSections) siteData.customSections = [];
+    }
+
+    function renderAdminNavigationList() {
+      ensureNavigationData();
+      const listContainer = document.getElementById('admin-nav-list');
+      if (!listContainer) return;
+
+      listContainer.innerHTML = siteData.navigation.map((item, idx) => `
+        <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${item.enabled ? 'bg-white' : 'bg-slate-50 opacity-70'}">
+          <div class="flex items-center gap-3">
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleNavVisibility(${idx}, this.checked)" class="sr-only peer">
+              <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+            </label>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-900 text-sm">${item.label}</span>
+                <span class="text-[10px] ${item.isCustom ? 'bg-orange-100 text-chipman-orange border border-orange-200' : 'bg-slate-100 text-slate-600'} px-2 py-0.5 rounded-full font-semibold">
+                  ${item.isCustom ? 'Custom Page' : 'Built-in Page'}
+                </span>
+                <span class="text-xs font-mono text-slate-400">#${item.id}</span>
+              </div>
+              <p class="text-xs ${item.enabled ? 'text-emerald-700 font-semibold' : 'text-slate-400'}">
+                ${item.enabled ? '● Visible in Navigation' : '○ Hidden from Public Site'}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="renameNavItem(${idx})" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">
+              Rename
+            </button>
+            <button onclick="moveNavItem(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded"'}>
+              ↑
+            </button>
+            <button onclick="moveNavItem(${idx}, 1)" ${idx === siteData.navigation.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded"'}>
+              ↓
+            </button>
+            ${item.isCustom ? `
+              <button onclick="deleteCustomSectionById('${item.id}')" class="px-2.5 py-1 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded font-medium">
+                Delete
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleNavVisibility(idx, isChecked) {
+      ensureNavigationData();
+      siteData.navigation[idx].enabled = isChecked;
+      renderAll();
+    }
+
+    function renameNavItem(idx) {
+      ensureNavigationData();
+      const current = siteData.navigation[idx].label;
+      const updated = prompt('Enter new navigation label:', current);
+      if (updated && updated.trim()) {
+        siteData.navigation[idx].label = updated.trim();
+        renderAll();
+      }
+    }
+
+    function moveNavItem(idx, direction) {
+      ensureNavigationData();
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.navigation.length) return;
+      const temp = siteData.navigation[idx];
+      siteData.navigation[idx] = siteData.navigation[targetIdx];
+      siteData.navigation[targetIdx] = temp;
+      renderAll();
+    }
+
+    // ================= CUSTOM SECTIONS CRUD =================
+    function renderAdminCustomSectionsList() {
+      ensureNavigationData();
+      const container = document.getElementById('admin-custom-sections-list');
+      if (!container) return;
+
+      if (!siteData.customSections || siteData.customSections.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-white rounded-xl p-8 text-center text-slate-400 text-xs border border-dashed border-slate-300 space-y-2">
+            <p>No custom pages added yet.</p>
+            <p class="text-slate-500">Click <strong>"Add New Page"</strong> above to create dedicated pages like Teaching, Protocols, Resources, or Join Us.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = siteData.customSections.map((sec, idx) => `
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
+          <div class="h-28 relative bg-slate-800">
+            <img loading="lazy" decoding="async" src="${sec.banner || './images/banners/home_banner.jpg'}" class="w-full h-full object-cover opacity-75">
+            <div class="absolute inset-0 bg-black/40 p-4 flex flex-col justify-end">
+              <h5 class="text-white font-bold text-base leading-tight">${sec.title}</h5>
+              <span class="text-[11px] text-slate-300 font-mono">#${sec.id}</span>
+            </div>
+          </div>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <p class="text-xs text-slate-600 line-clamp-2">${sec.intro || 'No introductory text provided.'}</p>
+            <p class="text-[11px] text-slate-400 font-medium">${(sec.blocks || []).length} content block(s)</p>
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+              <div class="flex items-center gap-1.5">
+                <button onclick="moveCustomSection(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Earlier">↑</button>
+                <button onclick="moveCustomSection(${idx}, 1)" ${idx === siteData.customSections.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Later">↓</button>
+                <button onclick="editCustomSection(${idx})" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">Edit Content</button>
+              </div>
+              <button onclick="deleteCustomSection(${idx})" class="text-xs text-red-600 hover:text-red-800 font-semibold">Delete Page</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddCustomSectionModal() {
+      openSubModal('Create New Custom Page', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Page Title *</label>
+          <input type="text" id="cs-title" placeholder="e.g. Teaching & Courses, Protocols, Equipment" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Navigation Tab Label (short)</label>
+          <input type="text" id="cs-label" placeholder="e.g. Teaching" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Hero Banner Image</label>
+          <div class="flex items-center gap-3">
+            <img id="cs-preview" src="./images/banners/home_banner.jpg" class="w-16 h-10 rounded-lg object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="cs-banner" value="./images/banners/home_banner.jpg" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Banner Image...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'cs-banner', 'cs-preview')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Page Subtitle / Tagline (optional)</label>
+          <input type="text" id="cs-subtitle" placeholder="e.g. Undergraduate and Graduate Courses in Evo-Devo" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Lead Introduction</label>
+          <textarea id="cs-intro" rows="3" placeholder="Overview text displayed prominently at the top of the page..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg"></textarea>
+        </div>
+      `, () => {
+        const title = document.getElementById('cs-title').value.trim();
+        if (!title) return alert('Page title is required.');
+        const label = document.getElementById('cs-label').value.trim() || title;
+        const banner = document.getElementById('cs-banner').value.trim();
+        const subtitle = document.getElementById('cs-subtitle').value.trim();
+        const intro = document.getElementById('cs-intro').value.trim();
+
+        // Generate unique URL id slug
+        const baseId = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'page';
+        let uniqueId = baseId;
+        let counter = 1;
+        while (siteData.navigation.some(n => n.id === uniqueId)) {
+          uniqueId = `${baseId}-${counter++}`;
+        }
+
+        const newPage = {
+          id: uniqueId,
+          title: title,
+          subtitle: subtitle,
+          banner: banner,
+          intro: intro,
+          blocks: [
+            {
+              title: "General Information",
+              content: "Add detailed information, guidelines, or descriptions for this section.",
+              linkLabel: "",
+              linkUrl: ""
+            }
+          ]
+        };
+
+        siteData.customSections.push(newPage);
+        siteData.navigation.push({
+          id: uniqueId,
+          label: label,
+          enabled: true,
+          isCustom: true
+        });
+
+        renderAll();
+      });
+    }
+
+    function editCustomSection(idx) {
+      const sec = siteData.customSections[idx];
+      if (!sec) return;
+
+      const navItem = siteData.navigation.find(n => n.id === sec.id);
+
+      openSubModal(`Edit Page: ${sec.title}`, `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Page Title *</label>
+          <input type="text" id="cs-title" value="${(sec.title || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Navigation Tab Label</label>
+          <input type="text" id="cs-label" value="${((navItem ? navItem.label : sec.title) || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Hero Banner Image</label>
+          <div class="flex items-center gap-3">
+            <img id="cs-preview" src="${sec.banner || './images/banners/home_banner.jpg'}" class="w-16 h-10 rounded-lg object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="cs-banner" value="${sec.banner || ''}" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Banner Image...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'cs-banner', 'cs-preview')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Page Subtitle / Tagline</label>
+          <input type="text" id="cs-subtitle" value="${(sec.subtitle || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Lead Introduction</label>
+          <textarea id="cs-intro" rows="3" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">${sec.intro || ''}</textarea>
+        </div>
+        <div class="border-t border-slate-200 pt-3 space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-slate-700">Content Blocks</label>
+            <button type="button" onclick="addBlockFieldToForm()" class="text-xs text-chipman-orange hover:underline font-bold">+ Add Content Block</button>
+          </div>
+          <div id="cs-blocks-container" class="space-y-4">
+            ${(sec.blocks || []).map((b, bIdx) => `
+              <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 block-item" data-bidx="${bIdx}">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-700 block-header-title">Block #${bIdx + 1}</span>
+                  <div class="flex items-center gap-1">
+                    <button type="button" onclick="moveBlock(this, -1)" class="px-1.5 py-0.5 text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-bold" title="Move Up">↑</button>
+                    <button type="button" onclick="moveBlock(this, 1)" class="px-1.5 py-0.5 text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-bold" title="Move Down">↓</button>
+                    <button type="button" onclick="this.closest('.block-item').remove()" class="text-xs text-red-500 hover:text-red-700 ml-2">Remove</button>
+                  </div>
+                </div>
+                <input type="text" class="block-title w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg" placeholder="Block Heading" value="${(b.title || '').replace(/"/g, '&quot;')}">
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-semibold text-slate-500">Block Content:</span>
+                    <div class="flex items-center gap-1">
+                      <button type="button" onclick="formatBtnClick(this, '**', '**')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 font-bold text-slate-800 text-[10px] leading-none transition" title="Bold (Ctrl+B)">B</button>
+                      <button type="button" onclick="formatBtnClick(this, '*', '*')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 italic font-serif text-slate-800 text-[10px] leading-none transition" title="Italic (Ctrl+I)">I</button>
+                    </div>
+                  </div>
+                  <textarea class="block-content w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg" rows="3" placeholder="Paragraph text... (supports **bold** and *italics*)">${b.content || ''}</textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <input type="text" class="block-link-label w-full px-2.5 py-1 text-xs border border-slate-300 rounded-lg" placeholder="Button Label (optional)" value="${(b.linkLabel || '').replace(/"/g, '&quot;')}">
+                  <input type="url" class="block-link-url w-full px-2.5 py-1 text-xs border border-slate-300 rounded-lg" placeholder="URL / Link (optional)" value="${(b.linkUrl || '').replace(/"/g, '&quot;')}">
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `, () => {
+        sec.title = document.getElementById('cs-title').value.trim();
+        sec.banner = document.getElementById('cs-banner').value.trim();
+        sec.subtitle = document.getElementById('cs-subtitle').value.trim();
+        sec.intro = document.getElementById('cs-intro').value.trim();
+
+        if (navItem) {
+          navItem.label = document.getElementById('cs-label').value.trim() || sec.title;
+        }
+
+        // Collect content blocks
+        const blockEls = document.querySelectorAll('#cs-blocks-container .block-item');
+        sec.blocks = Array.from(blockEls).map(el => ({
+          title: el.querySelector('.block-title').value.trim(),
+          content: el.querySelector('.block-content').value.trim(),
+          linkLabel: el.querySelector('.block-link-label').value.trim(),
+          linkUrl: el.querySelector('.block-link-url').value.trim()
+        })).filter(b => b.title || b.content);
+
+        renderAll();
+      });
+    }
+
+    function addBlockFieldToForm() {
+      const container = document.getElementById('cs-blocks-container');
+      if (!container) return;
+      const count = container.querySelectorAll('.block-item').length + 1;
+      const div = document.createElement('div');
+      div.className = 'p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 block-item';
+      div.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-700 block-header-title">Block #${count}</span>
+          <div class="flex items-center gap-1">
+            <button type="button" onclick="moveBlock(this, -1)" class="px-1.5 py-0.5 text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-bold" title="Move Up">↑</button>
+            <button type="button" onclick="moveBlock(this, 1)" class="px-1.5 py-0.5 text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded font-bold" title="Move Down">↓</button>
+            <button type="button" onclick="this.closest('.block-item').remove()" class="text-xs text-red-500 hover:text-red-700 ml-2">Remove</button>
+          </div>
+        </div>
+        <input type="text" class="block-title w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg" placeholder="Block Heading">
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-semibold text-slate-500">Block Content:</span>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="formatBtnClick(this, '**', '**')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 font-bold text-slate-800 text-[10px] leading-none transition" title="Bold (Ctrl+B)">B</button>
+              <button type="button" onclick="formatBtnClick(this, '*', '*')" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 italic font-serif text-slate-800 text-[10px] leading-none transition" title="Italic (Ctrl+I)">I</button>
+            </div>
+          </div>
+          <textarea class="block-content w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg" rows="3" placeholder="Paragraph text... (supports **bold** and *italics*)"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" class="block-link-label w-full px-2.5 py-1 text-xs border border-slate-300 rounded-lg" placeholder="Button Label (optional)">
+          <input type="url" class="block-link-url w-full px-2.5 py-1 text-xs border border-slate-300 rounded-lg" placeholder="URL / Link (optional)">
+        </div>
+      `;
+      container.appendChild(div);
+    }
+
+    function deleteCustomSection(idx) {
+      const sec = siteData.customSections[idx];
+      if (!sec) return;
+      deleteCustomSectionById(sec.id);
+    }
+
+    function deleteCustomSectionById(id) {
+      if (!confirm(`Are you sure you want to delete this custom section? All its content will be removed.`)) return;
+      siteData.customSections = (siteData.customSections || []).filter(s => s.id !== id);
+      siteData.navigation = (siteData.navigation || []).filter(n => n.id !== id);
+      renderAll();
+    }
+
+    // ================= VERSION HISTORY & ARCHIVES =================
+    function getArchiveHistory() {
+      try {
+        const stored = localStorage.getItem('chipman_lab_archives');
+        return stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveArchiveHistory(list) {
+      try {
+        localStorage.setItem('chipman_lab_archives', JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function recordArchiveSnapshot(dataObj, reason = 'Pre-save backup') {
+      const history = getArchiveHistory();
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      const timestamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+      const readableDate = now.toLocaleString();
+      const filename = `data_archive_${timestamp}.js`;
+
+      const snapshot = {
+        id: 'ver_' + Date.now(),
+        timestamp: timestamp,
+        date: readableDate,
+        filename: filename,
+        reason: reason,
+        membersCount: (dataObj.team?.current || []).length,
+        pubsCount: (dataObj.publications || []).length,
+        data: dataObj
+      };
+
+      // Keep up to 50 most recent archived versions
+      history.unshift(snapshot);
+      if (history.length > 50) history.pop();
+      saveArchiveHistory(history);
+      renderArchiveList();
+      return snapshot;
+    }
+
+    function renderArchiveList() {
+      const listContainer = document.getElementById('admin-archives-list');
+      if (!listContainer) return;
+      const history = getArchiveHistory();
+
+      if (history.length === 0) {
+        listContainer.innerHTML = `
+          <div class="p-8 text-center text-slate-400 text-xs">
+            No archived snapshots saved yet. Whenever you click <strong>"Save Changes to File"</strong>, a timestamped archive copy of the previous version is created automatically.
+          </div>`;
+        return;
+      }
+
+      listContainer.innerHTML = history.map((ver, idx) => `
+        <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-slate-900 text-sm font-mono">${ver.filename}</span>
+              <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-semibold">${ver.reason}</span>
+            </div>
+            <p class="text-xs text-slate-500">
+              Archived on <span class="font-medium text-slate-700">${ver.date}</span> • Contains ${ver.membersCount} members, ${ver.pubsCount} publications
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="restoreArchiveVersion('${ver.id}')" class="px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-chipman-orange rounded-lg text-xs font-bold border border-orange-200 transition">
+              Restore / Pull Out
+            </button>
+            <button onclick="downloadArchiveVersion('${ver.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center gap-1">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Download</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function restoreArchiveVersion(id) {
+      const history = getArchiveHistory();
+      const target = history.find(v => v.id === id);
+      if (!target) return alert('Version not found.');
+
+      if (confirm(`Are you sure you want to pull out and restore version "${target.filename}" (${target.date})? This will replace your current editor draft.`)) {
+        // First archive current state before restoring
+        recordArchiveSnapshot(JSON.parse(JSON.stringify(siteData)), 'Auto-archive before restoring ' + target.filename);
+        siteData = JSON.parse(JSON.stringify(target.data));
+        persistDraft();
+        populateAdminViews();
+        alert(`Successfully restored version from ${target.date}! You can now review it in the tabs and click "Save Changes to File" to write it to data.js.`);
+      }
+    }
+
+    function downloadArchiveVersion(id) {
+      const history = getArchiveHistory();
+      const target = history.find(v => v.id === id);
+      if (!target) return;
+      const content = "// Archived data file: " + target.filename + " (" + target.date + ")\nwindow.LAB_DATA = " + JSON.stringify(target.data, null, 2) + ";\n";
+      const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = target.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function loadCustomArchiveFile(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const raw = e.target.result;
+          let parsedData = null;
+          if (raw.includes('window.LAB_DATA =')) {
+            const jsonPart = raw.split('window.LAB_DATA =')[1].replace(/;\s*$/, '');
+            parsedData = JSON.parse(jsonPart);
+          } else {
+            parsedData = JSON.parse(raw);
+          }
+
+          if (parsedData && parsedData.labInfo) {
+            recordArchiveSnapshot(JSON.parse(JSON.stringify(siteData)), 'Auto-archive before importing ' + file.name);
+            siteData = parsedData;
+            persistDraft();
+            populateAdminViews();
+            alert(`Successfully loaded archive file "${file.name}" into editor!`);
+          } else {
+            alert('File does not match expected Lab Data structure.');
+          }
+        } catch (err) {
+          alert('Error parsing file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function clearDraftAndReload() {
+      if (confirm('Reset editor to original base data? Unsaved draft changes will be cleared.')) {
+        localStorage.removeItem('chipman_lab_draft');
+        window.location.reload();
+      }
+    }
+
+    // ================= INDEXEDDB PERSISTENT DIRECTORY HANDLE =================
+    const DB_NAME = 'chipman_cms_db';
+    const DB_STORE = 'handles';
+    let cachedDirHandle = null;
+
+    function openHandleDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(DB_STORE)) {
+            db.createObjectStore(DB_STORE);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function getSavedDirHandle() {
+      try {
+        const db = await openHandleDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(DB_STORE, 'readonly');
+          const store = tx.objectStore(DB_STORE);
+          const req = store.get('project_dir');
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function storeSavedDirHandle(handle) {
+      try {
+        const db = await openHandleDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(DB_STORE, 'readwrite');
+          const store = tx.objectStore(DB_STORE);
+          store.put(handle, 'project_dir');
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        });
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function updateFolderBadge(handle) {
+      const badge = document.getElementById('admin-folder-badge');
+      const nameEl = document.getElementById('admin-folder-name');
+      if (!badge || !nameEl) return;
+      if (handle && handle.name) {
+        nameEl.innerText = handle.name;
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+        badge.title = `Connected to "${handle.name}". Click to change or re-select.`;
+      } else {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+      }
+    }
+
+    async function promptChangeFolder() {
+      if (!window.showDirectoryPicker) {
+        alert('File System Access API is not supported in this browser. Downloads will be used instead.');
+        return;
+      }
+      try {
+        const handle = await window.showDirectoryPicker();
+        await storeSavedDirHandle(handle);
+        cachedDirHandle = handle;
+        await updateFolderBadge(handle);
+        lucide.createIcons();
+        alert(`Connected to folder: "${handle.name}"!\n\nAll future saves will write data.js and archive snapshots directly to this folder.`);
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          alert('Could not set directory: ' + e.message);
+        }
+      }
+    }
+
+    async function verifyPermission(fileHandle, readWrite) {
+      const options = {};
+      if (readWrite) options.mode = 'readwrite';
+      if ((await fileHandle.queryPermission(options)) === 'granted') return true;
+      if ((await fileHandle.requestPermission(options)) === 'granted') return true;
+      return false;
+    }
+
+    
+    // ================= ORDERING & REORDER HELPER FUNCTIONS =================
+    function moveApproach(idx, direction) {
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.homeApproaches.length) return;
+      const temp = siteData.homeApproaches[idx];
+      siteData.homeApproaches[idx] = siteData.homeApproaches[targetIdx];
+      siteData.homeApproaches[targetIdx] = temp;
+      siteData.homeApproaches.forEach((a, i) => { a.num = i + 1; });
+      renderAll();
+    }
+
+    function moveResearchProject(idx, direction) {
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.researchProjects.length) return;
+      const temp = siteData.researchProjects[idx];
+      siteData.researchProjects[idx] = siteData.researchProjects[targetIdx];
+      siteData.researchProjects[targetIdx] = temp;
+      renderAll();
+    }
+
+    function movePublication(idx, direction) {
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.publications.length) return;
+      const temp = siteData.publications[idx];
+      siteData.publications[idx] = siteData.publications[targetIdx];
+      siteData.publications[targetIdx] = temp;
+      renderAll();
+    }
+
+    function moveNewsItem(idx, direction) {
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.news.length) return;
+      const temp = siteData.news[idx];
+      siteData.news[idx] = siteData.news[targetIdx];
+      siteData.news[targetIdx] = temp;
+      renderAll();
+    }
+
+    function moveGalleryPhoto(secIdx, itemIdx, direction) {
+      ensureGallerySections();
+      const sec = siteData.gallery.sections[secIdx];
+      if (!sec || !sec.items) return;
+      const targetIdx = itemIdx + direction;
+      if (targetIdx < 0 || targetIdx >= sec.items.length) return;
+      const temp = sec.items[itemIdx];
+      sec.items[itemIdx] = sec.items[targetIdx];
+      sec.items[targetIdx] = temp;
+      renderAll();
+    }
+
+    function moveCustomSection(idx, direction) {
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.customSections.length) return;
+      const temp = siteData.customSections[idx];
+      siteData.customSections[idx] = siteData.customSections[targetIdx];
+      siteData.customSections[targetIdx] = temp;
+      renderAll();
+    }
+
+    function moveBlock(btn, dir) {
+      const item = btn.closest('.block-item');
+      if (!item) return;
+      if (dir === -1 && item.previousElementSibling) {
+        item.parentElement.insertBefore(item, item.previousElementSibling);
+      } else if (dir === 1 && item.nextElementSibling) {
+        item.parentElement.insertBefore(item.nextElementSibling, item);
+      }
+      item.parentElement.querySelectorAll('.block-item').forEach((el, i) => {
+        const titleSpan = el.querySelector('.block-header-title');
+        if (titleSpan) titleSpan.innerText = `Block #${i + 1}`;
+      });
+    }
+
+    // ================= ACTIVE SAVE PROGRESS INDICATOR =================
+    function showSaveProgress(msg) {
+      const btn = document.getElementById('admin-save-btn');
+      const toast = document.getElementById('admin-save-toast');
+      const toastText = document.getElementById('admin-save-toast-text');
+      const toastIcon = document.getElementById('admin-save-toast-icon');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="animate-spin w-4 h-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>${msg || 'Saving progress...'}</span>`;
+      }
+      if (toast) {
+        if (toastText) toastText.innerText = msg || 'Saving progress to data.js & archive...';
+        if (toastIcon) {
+          toastIcon.innerHTML = `<svg class="animate-spin w-4 h-4 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+        }
+        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      }
+    }
+
+    function hideSaveProgress(successMsg, isError = false) {
+      const btn = document.getElementById('admin-save-btn');
+      const toast = document.getElementById('admin-save-toast');
+      const toastText = document.getElementById('admin-save-toast-text');
+      const toastIcon = document.getElementById('admin-save-toast-icon');
+
+      if (btn) {
+        if (isError) {
+          btn.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 text-red-300"></i> <span>${successMsg || 'Save canceled'}</span>`;
+        } else {
+          btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-300"></i> <span>${successMsg || 'Saved Successfully!'}</span>`;
+        }
+        lucide.createIcons();
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> <span id="admin-save-btn-text">Save Changes to File</span>`;
+          lucide.createIcons();
+        }, 2200);
+      }
+
+      if (toast) {
+        if (toastText) toastText.innerText = successMsg || 'Saved successfully!';
+        if (toastIcon) {
+          if (isError) {
+            toastIcon.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 text-amber-400"></i>`;
+          } else {
+            toastIcon.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>`;
+          }
+          lucide.createIcons();
+        }
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        }, 2500);
+      }
+    }
+
+    // ================= SAVE & EXPORT (WITH AUTOMATIC ARCHIVE TO SAME FOLDER) =================
+    async function saveAndExportData() {
+      showSaveProgress('Saving progress to data.js & archive...');
+      autoMigrateImagePaths(siteData);
+      // 1. Automatically create an archived snapshot of the previous version before saving
+      const previousState = window.LAB_DATA || siteData;
+      const snapshot = recordArchiveSnapshot(JSON.parse(JSON.stringify(previousState)), 'Previous version before save');
+
+      const fileContent = "// Updated data file generated from the Chipman Lab Admin UI\nwindow.LAB_DATA = " + JSON.stringify(siteData, null, 2) + ";\n";
+      const archiveContent = "// Archive snapshot: " + snapshot.filename + " (" + snapshot.date + ")\nwindow.LAB_DATA = " + JSON.stringify(previousState, null, 2) + ";\n";
+
+      // 2. Try Chrome/Edge Modern File System Access API
+      if (window.showDirectoryPicker) {
+        let dirHandle = cachedDirHandle;
+
+        // Try to retrieve remembered handle from IndexedDB
+        if (!dirHandle) {
+          dirHandle = await getSavedDirHandle();
+        }
+
+        // Verify permission or ask user to select folder once
+        let hasAccess = false;
+        if (dirHandle) {
+          try {
+            hasAccess = await verifyPermission(dirHandle, true);
+          } catch (e) {
+            hasAccess = false;
+          }
+        }
+
+        if (!hasAccess) {
+          try {
+            alert('Please select your "lab website" folder once.\n\nAfter this single confirmation, admin.html will remember this location and automatically overwrite data.js and archive older versions directly to this folder with 1 click.');
+            dirHandle = await window.showDirectoryPicker();
+            await storeSavedDirHandle(dirHandle);
+            cachedDirHandle = dirHandle;
+            await updateFolderBadge(dirHandle);
+            hasAccess = true;
+          } catch (err) {
+            if (err.name === 'AbortError') {
+              // User cancelled directory picker, fall through to single-file fallback
+            }
+          }
+        }
+
+        if (hasAccess && dirHandle) {
+          try {
+            // 1. Write previous version to archive/
+            const archiveDir = await dirHandle.getDirectoryHandle('archive', { create: true });
+            const archiveFileHandle = await archiveDir.getFileHandle(snapshot.filename, { create: true });
+            const archiveWritable = await archiveFileHandle.createWritable();
+            await archiveWritable.write(archiveContent);
+            await archiveWritable.close();
+
+            // 2. Overwrite main data.js in the same folder with new version
+            const dataFileHandle = await dirHandle.getFileHandle('data.js', { create: true });
+            const dataWritable = await dataFileHandle.createWritable();
+            await dataWritable.write(fileContent);
+            await dataWritable.close();
+
+            // Update in-memory window.LAB_DATA
+            window.LAB_DATA = JSON.parse(JSON.stringify(siteData));
+
+            hideSaveProgress('Saved Successfully!');
+            alert(`Saved Successfully to "${dirHandle.name}"!\n\n1. Overwrote data.js in this folder.\n2. Archived previous version to: ${dirHandle.name}/archive/${snapshot.filename}\n\nYour changes are live on the website!`);
+            return;
+          } catch (writeErr) {
+            console.warn('Direct directory write failed, falling back:', writeErr);
+          }
+        }
+      }
+
+      // Fallback 1: showSaveFilePicker for data.js
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: 'data.js',
+            types: [{
+              description: 'JavaScript Data File',
+              accept: { 'text/javascript': ['.js'] }
+            }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(fileContent);
+          await writable.close();
+
+          // Also trigger download of the archived copy for the archive folder
+          const blobArch = new Blob([archiveContent], { type: 'text/javascript;charset=utf-8' });
+          const urlArch = URL.createObjectURL(blobArch);
+          const aArch = document.createElement('a');
+          aArch.href = urlArch;
+          aArch.download = snapshot.filename;
+          document.body.appendChild(aArch);
+          aArch.click();
+          document.body.removeChild(aArch);
+          URL.revokeObjectURL(urlArch);
+
+          window.LAB_DATA = JSON.parse(JSON.stringify(siteData));
+          hideSaveProgress('Saved to data.js!');
+          alert(`Saved to data.js!\n\nAlso downloaded archive snapshot: "${snapshot.filename}". Place it in your "archive" folder to keep older versions organized.`);
+          return;
+        } catch (err) {}
+      }
+
+      // Fallback 2: Dual Downloads
+      const blobNew = new Blob([fileContent], { type: 'text/javascript;charset=utf-8' });
+      const urlNew = URL.createObjectURL(blobNew);
+      const aNew = document.createElement('a');
+      aNew.href = urlNew;
+      aNew.download = 'data.js';
+      document.body.appendChild(aNew);
+      aNew.click();
+      document.body.removeChild(aNew);
+      URL.revokeObjectURL(urlNew);
+
+      setTimeout(() => {
+        const blobArch = new Blob([archiveContent], { type: 'text/javascript;charset=utf-8' });
+        const urlArch = URL.createObjectURL(blobArch);
+        const aArch = document.createElement('a');
+        aArch.href = urlArch;
+        aArch.download = snapshot.filename;
+        document.body.appendChild(aArch);
+        aArch.click();
+        document.body.removeChild(aArch);
+        URL.revokeObjectURL(urlArch);
+      }, 500);
+
+      window.LAB_DATA = JSON.parse(JSON.stringify(siteData));
+      hideSaveProgress('Files Generated!');
+      alert(`Files Generated:\n\n1. "data.js" (New version - replace in your project folder)\n2. "${snapshot.filename}" (Archived previous version - save in the "archive" folder)`);
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', async () => {
+      populateAdminViews();
+      renderArchiveList();
+
+      // Check if folder handle was previously saved
+      try {
+        const savedHandle = await getSavedDirHandle();
+        if (savedHandle) {
+          cachedDirHandle = savedHandle;
+          await updateFolderBadge(savedHandle);
+        }
+      } catch (e) {}
+
+      lucide.createIcons();
+    });
+  </script>
+
+  <!-- Floating Save Progress Toast Notification -->
+  <div id="admin-save-toast" class="fixed bottom-6 right-6 z-50 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+    <div class="flex items-center gap-3 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs font-semibold">
+      <div id="admin-save-toast-icon">
+        <svg class="animate-spin w-4 h-4 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+      <span id="admin-save-toast-text">Saving progress to data.js & archive...</span>
+    </div>
+  </div>
+
+</body>
+</html>

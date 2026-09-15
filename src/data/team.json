@@ -1,0 +1,105 @@
+{
+  "pi": {
+    "name": "Prof. Ariel D. Chipman",
+    "role": "Principal Investigator",
+    "degree": "Ph.D.",
+    "bio": "Ariel Chipman is an Associate Professor of Evolutionary Developmental Biology in the Department of Ecology, Evolution and Behavior at the Hebrew University of Jerusalem. He earned his B.Sc., M.Sc., and Ph.D. from the Hebrew University, followed by postdoctoral research at the University of Cambridge under Prof. Michael Akam. His work focuses on comparative embryology, developmental genomics, and arthropod evolution. He serves as an editor for leading evolutionary biology journals and has co-led major international arthropod genome projects.",
+    "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+    "email": "ariel.chipman@mail.huji.ac.il",
+    "links": {
+      "scholar": "https://scholar.google.com/citations?user=GOMspxsAAAAJ",
+      "orcid": "https://orcid.org/0000-0002-3904-8971",
+      "researchgate": "https://www.researchgate.net/profile/Ariel-Chipman"
+    }
+  },
+  "current": [
+    {
+      "id": "postdoc-1",
+      "name": "Dr. Maya Rosen",
+      "role": "Postdoctoral Researcher",
+      "project": "Deciphering anterior blastoderm patterning and head segmentation in Hemiptera",
+      "photo": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+      "email": "maya.rosen@mail.huji.ac.il",
+      "links": {
+        "scholar": "https://scholar.google.com",
+        "orcid": "https://orcid.org"
+      }
+    },
+    {
+      "id": "phd-1",
+      "name": "Idan Sheizaf",
+      "role": "Ph.D. Candidate",
+      "project": "Evolution of segment addition and posterior growth zone dynamics in arthropods",
+      "photo": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+      "email": "idan.sheizaf@mail.huji.ac.il",
+      "links": {
+        "scholar": "https://scholar.google.com",
+        "orcid": "https://orcid.org"
+      }
+    },
+    {
+      "id": "phd-2",
+      "name": "Noa Ben-David",
+      "role": "Ph.D. Candidate",
+      "project": "Gene regulatory networks underlying head appendage novelty and chelicerate evolution",
+      "photo": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80",
+      "email": "noa.bendavid@mail.huji.ac.il",
+      "links": {
+        "scholar": "https://scholar.google.com",
+        "orcid": "https://orcid.org"
+      }
+    },
+    {
+      "id": "msc-1",
+      "name": "Daniel Levin",
+      "role": "M.Sc. Student",
+      "project": "Phylogeography and morphological variation of Levantine cave-dwelling arthropods",
+      "photo": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
+      "email": "daniel.levin@mail.huji.ac.il",
+      "links": {
+        "scholar": "https://scholar.google.com"
+      }
+    },
+    {
+      "id": "tech-1",
+      "name": "Talia Ronen",
+      "role": "Lab Manager & Senior Technician",
+      "project": "Insect colony maintenance, embryo microinjections, and confocal microscopy facility coordination",
+      "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80",
+      "email": "talia.ronen@mail.huji.ac.il",
+      "links": {}
+    }
+  ],
+  "alumni": [
+    {
+      "name": "Dr. Efrat Green",
+      "degree": "Ph.D. 2022",
+      "pastProject": "Segmentation clocks in milkweed bugs",
+      "currentPosition": "Postdoctoral Fellow, EMBL Heidelberg"
+    },
+    {
+      "name": "Dr. Amit Cohen",
+      "degree": "Ph.D. 2019",
+      "pastProject": "Anterior gene expression networks in centipede embryos",
+      "currentPosition": "Senior Scientist, Biotech Industry"
+    },
+    {
+      "name": "Yael Shaked",
+      "degree": "M.Sc. 2021",
+      "pastProject": "MicroRNA evolution across arthropod genomes",
+      "currentPosition": "Ph.D. Candidate, Weizmann Institute of Science"
+    },
+    {
+      "name": "Dr. Oren Sharon",
+      "degree": "Postdoc 2017–2020",
+      "pastProject": "Phylogenomics of Levantine invertebrates",
+      "currentPosition": "Lecturer in Zoology"
+    },
+    {
+      "name": "Guy Mor",
+      "degree": "M.Sc. 2018",
+      "pastProject": "Hox gene regulation in Tribolium",
+      "currentPosition": "Bioinformatician, Tel Aviv Medical Center"
+    }
+  ]
+}

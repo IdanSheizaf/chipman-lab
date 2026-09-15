@@ -1,0 +1,58 @@
+[
+  {
+    "id": "segmentation",
+    "title": "Arthropod Segmentation & Trunk Patterning",
+    "shortDescription": "Unraveling how the segmented body plan forms sequentially during embryogenesis and how segmentation clocks evolved across diverse arthropod lineages.",
+    "fullDescription": "Segmentation is the fundamental hallmark of the arthropod body plan. While Drosophila forms all its segments simultaneously (long-germ development), ancestral arthropods and most living taxa add segments sequentially from a posterior growth zone (short-germ development). We combine gene expression profiling, RNA interference (RNAi), and developmental imaging to determine how ancestral segmentation gene networks functioned and how rhythmic segmentation clocks operate outside of vertebrates.",
+    "modelOrganisms": ["Oncopeltus fasciatus (Milkweed Bug)", "Tribolium castaneum (Red Flour Beetle)", "Strigamia maritima (Geophilomorph Centipede)"],
+    "keyQuestions": [
+      "How did sequential segment addition transition to simultaneous patterning?",
+      "Are oscillatory 'segmentation clocks' homologous between arthropods and chordates?",
+      "What genetic interactions establish posterior growth zones in hemimetabolous insects?"
+    ],
+    "image": "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=1000&q=80",
+    "tag": "Developmental Genetics"
+  },
+  {
+    "id": "head-evolution",
+    "title": "Evolution of the Arthropod Head & Cephalization",
+    "shortDescription": "Investigating the anterior-posterior boundaries, sensory appendage innovations, and gene regulatory networks that assembled the complex arthropod head.",
+    "fullDescription": "The origin of the arthropod head has puzzled evolutionary morphologists for over a century ('the endless head problem'). By tracing embryonic gene expression of anterior markers (such as orthodenticle, six3, and collar genes), our lab decodes the segmental composition of the anterior region and how ancestral neural and feeding structures transformed into modern mouthparts and compound eyes.",
+    "modelOrganisms": ["Chelicerates (Spiders)", "Myriapods (Centipedes & Millipedes)", "Hemipterans"],
+    "keyQuestions": [
+      "Where does the boundary between pre-segmental and segmental head tissues lie?",
+      "How do anterior gene regulatory networks direct appendage transformation?",
+      "How did head tagmosis evolve across different panarthropod lineages?"
+    ],
+    "image": "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=1000&q=80",
+    "tag": "Morphogenesis & Tagmosis"
+  },
+  {
+    "id": "comparative-genomics",
+    "title": "Comparative Genomics of Panarthropoda",
+    "shortDescription": "Leveraging whole-genome sequencing of non-model arthropods to decipher genomic architecture, gene family expansions, and microRNA evolution.",
+    "fullDescription": "Our lab actively participates in international consortia sequencing and annotating the genomes of key phylogenetic bridge organisms—such as centipedes, crustaceans, and spiders. We analyze developmental gene complements, Wnt and Notch signaling pathway conservation, microRNA repertoires, and synteny to uncover the genomic changes that accompanied phenotypic radiations.",
+    "modelOrganisms": ["Strigamia maritima", "Parasteatoda tepidariorum", "Phoronida & Brachiopoda"],
+    "keyQuestions": [
+      "Which gene duplications and losses facilitated arthropod terrestrialization?",
+      "How stable are gene regulatory clusters across deep evolutionary time?",
+      "What role did non-coding regulatory elements play in body plan diversification?"
+    ],
+    "image": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1000&q=80",
+    "tag": "Genomics & Bioinformatics"
+  },
+  {
+    "id": "biogeography",
+    "title": "Historical Biogeography & Museum Invertebrates",
+    "shortDescription": "Utilizing the National Natural History Collections at Hebrew University to study evolutionary diversification, endemism, and historical biogeography.",
+    "fullDescription": "Israel and the Levant sit at a unique biogeographic crossroads connecting Africa, Europe, and Asia. Leveraging the extensive specimens housed in the National Invertebrate Collection at the Hebrew University, our group combines molecular phylogenetics and spatial modeling to map evolutionary lineages, speciation patterns, and the impacts of historical climate fluctuations on terrestrial fauna.",
+    "modelOrganisms": ["Levantine Terrestrial Invertebrates", "Arachnida & Myriapoda"],
+    "keyQuestions": [
+      "How have Pleistocene glacial cycles shaped Levantine invertebrate speciation?",
+      "What are the cryptic biodiversity hotspots in Mediterranean and desert transition zones?",
+      "How can museum genomics resurrect genetic data from historical collections?"
+    ],
+    "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80",
+    "tag": "Biodiversity & Collections"
+  }
+]
