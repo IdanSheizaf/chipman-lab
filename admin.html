@@ -141,7 +141,7 @@
                     <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md text-xs font-semibold transition">
                       <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                       <span>Browse Picture...</span>
-                      <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-pi-photo', 'admin-pi-photo-preview')">
+                      <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-pi-photo', 'admin-pi-photo-preview', 'team')">
                     </label>
                   </div>
                 </div>
@@ -328,7 +328,7 @@
                   <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md text-xs font-semibold transition">
                     <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                     <span>Browse Logo...</span>
-                    <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-logo-input', 'admin-banner-logo-preview')">
+                    <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-logo-input', 'admin-banner-logo-preview', 'logos')">
                   </label>
                 </div>
               </div>
@@ -344,7 +344,7 @@
                   <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md text-xs font-semibold transition">
                     <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                     <span>Browse Logo...</span>
-                    <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-huji-input', 'admin-banner-huji-preview')">
+                    <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-huji-input', 'admin-banner-huji-preview', 'logos')">
                   </label>
                 </div>
               </div>
@@ -363,7 +363,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3 h-3"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-home-input', 'admin-banner-home-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-home-input', 'admin-banner-home-preview', 'banners')">
               </label>
             </div>
 
@@ -377,7 +377,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3 h-3"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-research-input', 'admin-banner-research-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-research-input', 'admin-banner-research-preview', 'banners')">
               </label>
             </div>
 
@@ -391,7 +391,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3 h-3"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-group-input', 'admin-banner-group-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-group-input', 'admin-banner-group-preview', 'banners')">
               </label>
             </div>
 
@@ -405,7 +405,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3 h-3"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-publications-input', 'admin-banner-publications-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-publications-input', 'admin-banner-publications-preview', 'banners')">
               </label>
             </div>
 
@@ -419,7 +419,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3 h-3"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-gallery-input', 'admin-banner-gallery-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-gallery-input', 'admin-banner-gallery-preview', 'banners')">
               </label>
             </div>
 
@@ -433,7 +433,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3 h-3"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-news-input', 'admin-banner-news-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-news-input', 'admin-banner-news-preview', 'banners')">
               </label>
             </div>
 
@@ -447,7 +447,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-medium border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3 h-3"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-contact-input', 'admin-banner-contact-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'admin-banner-contact-input', 'admin-banner-contact-preview', 'banners')">
               </label>
             </div>
           </div>
@@ -933,18 +933,81 @@
     }
     persistDraft();
 
-    function handleImageFileSelect(event, targetInputId, previewImgId) {
+    // ================= IMAGE UPLOAD & ASSET MANAGEMENT =================
+    let pendingImageUploads = {};
+    try {
+      const stored = localStorage.getItem('chipman_pending_images');
+      if (stored) pendingImageUploads = JSON.parse(stored);
+    } catch (e) {}
+
+    function savePendingImages() {
+      try {
+        localStorage.setItem('chipman_pending_images', JSON.stringify(pendingImageUploads));
+      } catch (e) {}
+    }
+
+    function base64ToUint8Array(base64) {
+      const binaryString = atob(base64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    function sanitizeImageFilename(originalName) {
+      const lastDot = originalName.lastIndexOf('.');
+      let base = lastDot !== -1 ? originalName.substring(0, lastDot) : originalName;
+      let ext = lastDot !== -1 ? originalName.substring(lastDot + 1) : 'jpg';
+      ext = ext.toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+      base = base.toLowerCase()
+        .replace(/[^a-z0-9_-]/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '');
+      if (!base) base = 'image_' + Date.now();
+      return base + '.' + ext;
+    }
+
+    function handleImageFileSelect(event, targetInputId, previewImgId, subfolder) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
+
+      if (!subfolder) {
+        if (targetInputId.includes('pi') || targetInputId.includes('m-photo')) subfolder = 'team';
+        else if (targetInputId.includes('g-image') || targetInputId.includes('gallery')) subfolder = 'gallery';
+        else if (targetInputId.includes('logo') || targetInputId.includes('huji')) subfolder = 'logos';
+        else if (targetInputId.includes('banner') || targetInputId.includes('cs-banner')) subfolder = 'banners';
+        else subfolder = 'team';
+      }
+
+      const cleanFilename = sanitizeImageFilename(file.name);
+      const repoPath = `images/${subfolder}/${cleanFilename}`;
+      const relativePath = `./images/${subfolder}/${cleanFilename}`;
+
       const reader = new FileReader();
       reader.onload = function(e) {
         const dataUrl = e.target.result;
+        const base64 = dataUrl.split(',')[1];
+
+        pendingImageUploads[repoPath] = {
+          base64: base64,
+          repoPath: repoPath,
+          relativePath: relativePath,
+          subfolder: subfolder,
+          filename: cleanFilename,
+          mimeType: file.type || 'image/jpeg',
+          timestamp: Date.now()
+        };
+        savePendingImages();
+
         const inputEl = document.getElementById(targetInputId);
         if (inputEl) {
-          inputEl.value = dataUrl;
+          inputEl.value = relativePath;
           inputEl.dispatchEvent(new Event('input', { bubbles: true }));
           inputEl.dispatchEvent(new Event('change', { bubbles: true }));
         }
+
         if (previewImgId) {
           const prevEl = document.getElementById(previewImgId);
           if (prevEl) {
@@ -1199,7 +1262,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'm-photo', 'm-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'm-photo', 'm-preview', 'team')">
               </label>
             </div>
           </div>
@@ -1283,7 +1346,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'm-photo', 'm-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'm-photo', 'm-preview', 'team')">
               </label>
             </div>
           </div>
@@ -1818,7 +1881,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'g-image', 'g-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'g-image', 'g-preview', (typeof sec !== 'undefined' && sec.id === 'animals' ? 'gallery/animals' : (typeof sec !== 'undefined' && sec.id === 'activities' ? 'gallery/activities' : 'gallery')))">
               </label>
             </div>
           </div>
@@ -1858,7 +1921,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                 <span>Browse Picture...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'g-image', 'g-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'g-image', 'g-preview', (typeof sec !== 'undefined' && sec.id === 'animals' ? 'gallery/animals' : (typeof sec !== 'undefined' && sec.id === 'activities' ? 'gallery/activities' : 'gallery')))">
               </label>
             </div>
           </div>
@@ -2152,7 +2215,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                 <span>Browse Banner Image...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'cs-banner', 'cs-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'cs-banner', 'cs-preview', 'banners')">
               </label>
             </div>
           </div>
@@ -2233,7 +2296,7 @@
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
                 <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                 <span>Browse Banner Image...</span>
-                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'cs-banner', 'cs-preview')">
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'cs-banner', 'cs-preview', 'banners')">
               </label>
             </div>
           </div>
@@ -2778,6 +2841,27 @@
             await archiveWritable.write(archiveContent);
             await archiveWritable.close();
 
+            // Save any pending images to local images/ folder
+            const pendingKeys = Object.keys(pendingImageUploads);
+            for (const repoPath of pendingKeys) {
+              try {
+                const item = pendingImageUploads[repoPath];
+                const parts = repoPath.split('/');
+                let currHandle = dirHandle;
+                for (let p = 0; p < parts.length - 1; p++) {
+                  currHandle = await currHandle.getDirectoryHandle(parts[p], { create: true });
+                }
+                const imgHandle = await currHandle.getFileHandle(parts[parts.length - 1], { create: true });
+                const imgWritable = await imgHandle.createWritable();
+                await imgWritable.write(base64ToUint8Array(item.base64));
+                await imgWritable.close();
+              } catch (e) {
+                console.warn('Could not save local image file:', repoPath, e);
+              }
+            }
+            pendingImageUploads = {};
+            savePendingImages();
+
             // 2. Overwrite main data.js in the same folder with new version
             const dataFileHandle = await dirHandle.getFileHandle('data.js', { create: true });
             const dataWritable = await dataFileHandle.createWritable();
@@ -3132,10 +3216,70 @@
           throw new Error('Authority check failed: ' + authCheck.message);
         }
 
+        // 2. Upload pending image files directly to GitHub images/ directory
+        const pendingKeys = Object.keys(pendingImageUploads);
+        if (pendingKeys.length > 0) {
+          if (publishText) publishText.innerText = `Uploading images (0/${pendingKeys.length})...`;
+          showSaveProgress(`Uploading ${pendingKeys.length} image file(s) to GitHub images directory...`);
+
+          for (let i = 0; i < pendingKeys.length; i++) {
+            const repoPath = pendingKeys[i];
+            const item = pendingImageUploads[repoPath];
+            if (!item || !item.base64) continue;
+
+            if (publishText) publishText.innerText = `Uploading image ${i + 1}/${pendingKeys.length}...`;
+            showSaveProgress(`Uploading ${repoPath} (${i + 1}/${pendingKeys.length})...`);
+
+            let fileSha = null;
+            const getImgUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${repoPath}?ref=${GH_BRANCH}`;
+            try {
+              const checkRes = await fetch(getImgUrl, {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Accept': 'application/vnd.github.v3+json'
+                }
+              });
+              if (checkRes.ok) {
+                const info = await checkRes.json();
+                fileSha = info.sha;
+              }
+            } catch (e) {
+              console.warn('Could not check existing image SHA:', e);
+            }
+
+            const putImgUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${repoPath}`;
+            const putImgBody = {
+              message: `Upload image: ${repoPath} via CMS (${new Date().toLocaleDateString()})`,
+              content: item.base64,
+              branch: GH_BRANCH
+            };
+            if (fileSha) putImgBody.sha = fileSha;
+
+            const putImgRes = await fetch(putImgUrl, {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(putImgBody)
+            });
+
+            if (!putImgRes.ok) {
+              const errData = await putImgRes.json().catch(() => ({}));
+              throw new Error(`Failed to upload ${repoPath}: ${errData.message || putImgRes.statusText}`);
+            }
+          }
+
+          // Successfully uploaded all queued images, clear queue
+          pendingImageUploads = {};
+          savePendingImages();
+        }
+
         if (publishText) publishText.innerText = 'Fetching repo state...';
         showSaveProgress('Fetching current data.js SHA from GitHub...');
 
-        // 2. Fetch current data.js SHA on GitHub
+        // 3. Fetch current data.js SHA on GitHub
         const getUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/data.js?ref=${GH_BRANCH}`;
         const getRes = await fetch(getUrl, {
           headers: {
