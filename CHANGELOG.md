@@ -114,5 +114,19 @@ Added intuitive reordering controls across every multi-entry section of the site
 - **`CHANGELOG.md`**: Chronological log of all milestones, features, fixes, and architecture decisions.
 - **`README.md`**: Site documentation and hosting instructions.
 
+---
+
+### 12. In-Browser GitHub 1-Click Publishing & Authority Protection
+- **Direct GitHub 1-Click Publishing**:
+  - Added a dedicated **"Publish to GitHub"** action button in `admin.html`.
+  - Automatically fetches the current `data.js` SHA, compiles Unicode Base64 payload, and pushes commits directly to GitHub via the REST API (`PUT /repos/{owner}/{repo}/contents/data.js`).
+  - Triggers live GitHub Pages deployments within 30–60 seconds without requiring any local Git tools.
+- **Two-Layer Authority & Access Protection**:
+  - **Layer 1 (Admin Passcode Gate)**: Unlocked by default passcode (`chipman2024`, configurable), preventing casual visitors from viewing or interacting with the CMS editor.
+  - **Layer 2 (Cryptographic GitHub Token Verification)**: Live server-side authority check via `checkGitHubAuthority()`. Checks whether the token possesses active `push` (write) permissions on the repository before any commit can take place. Denies and blocks unauthorized publication attempts.
+- **GitHub Sync Configuration Modal**:
+  - Added `#github-modal` allowing users to configure owner, repository, branch, and personal access token with live connection testing and authority feedback badges.
+
+
 
 
