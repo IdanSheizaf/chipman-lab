@@ -127,9 +127,54 @@ Added intuitive reordering controls across every multi-entry section of the site
 - **GitHub Sync Configuration (PAT Only)**:
   - Streamlined the setup to require **only the Personal Access Token (PAT)**. The repository owner (`IdanSheizaf`), repository (`chipman-lab`), and branch (`main`) are pre-configured constants, eliminating unnecessary configuration steps for both the user and the PI.
 - **Enforced Passcode Gate by Default**:
-  - The admin authentication gate is now rendered visible by default with an instant session check, ensuring `admin.html` is strictly locked until `chipman2024` is entered.
+  - The admin authentication gate is rendered visible by default with an instant session check, ensuring `admin.html` is strictly locked until authorized.
+  - Removed the default passcode hint text entirely from the unlock screen to prevent unauthorized access.
 
+---
 
+### 13. Admin Passcode Security & Cryptographic Protection (SHA-256 + Salt)
+- **Passcode Hint Removal**:
+  - Completely purged the *"Default passcode: chipman2024"* hint text from `#admin-auth-gate` in `admin.html`.
+- **SHA-256 Passcode Encryption**:
+  - Replaced plaintext passcode verification with browser-native **SHA-256 cryptographic hashing** via the Web Crypto API (`crypto.subtle`) combined with a dedicated salt (`chipman_evo_devo_lab_salt_2026`).
+  - Neither the default passcode nor any future passcode is ever stored in plaintext within HTML, JavaScript, or public GitHub files. Only the irreversible 64-character hexadecimal hash is stored in `data.js` (`adminPasscodeHash`).
+  - When unlocking, the entered passcode is salted and hashed on the fly and compared against the stored hash.
+- **In-Browser Passcode Settings**:
+  - Added a dedicated **Admin Security & Passcode** card within the **Lab Info & Settings** tab in `admin.html`.
+  - Authorized lab administrators can update the passcode directly from the CMS interface with validation (minimum 6 characters), confirmation matching, and a show/hide visibility toggle.
+  - Clicking *"Save New Passcode"* computes the new SHA-256 hash and updates `siteData.adminPasscodeHash`. A subsequent click on *"Publish to GitHub"* deploys the new security credential live.
+- **Purge of Legacy "Future Projects" Tab**:
+  - Cleaned up the legacy "future-projects" navigation item and custom section from `data.js`.
+  - Added automatic sanitization filters in `admin.html` startup to strip `future-projects` from legacy browser drafts in `localStorage`.
 
+---
 
+### 14. Public Site Copyright & Cache Invalidation (2026)
+- **Copyright Year Update**:
+  - Updated the public footer attribution in `index.html` to `© 2026 by the Evo-Devo lab`.
+- **Cache-Busting Query**:
+  - Incremented the data script cache-busting query parameter to `?v=6` across both `index.html` and `admin.html` to ensure browsers load updated site data immediately.
 
+---
+
+### 15. Direct Image Asset Upload Pipeline to GitHub `images/` Subfolders
+- **Architecture Transition**:
+  - Eliminated bulky Base64 data URL embedding inside `data.js`, preventing multi-megabyte bloat, speeding up site loading, and enabling independent browser caching of images.
+- **Automatic Subdirectory Routing**:
+  - Configured file selectors to automatically route uploads into organized repository subfolders:
+    - **PI & Team Members**: `images/team/`
+    - **Lab Animals Gallery**: `images/gallery/animals/`
+    - **Lab Activities Gallery**: `images/gallery/activities/`
+    - **Banners & Custom Sections**: `images/banners/`
+    - **Lab & University Logos**: `images/logos/`
+- **Filename Sanitization**:
+  - Filenames are normalized automatically (converted to lowercase, spaces converted to underscores, special characters stripped, and valid extensions preserved, e.g. `Prof. Ariel Chipman (2026).JPG` $\rightarrow$ `prof_ariel_chipman_2026.jpg`).
+- **Immediate Preview & Clean Data References**:
+  - Local images are rendered instantly in the CMS preview element.
+  - Form input fields and `data.js` record only clean relative paths (e.g. `./images/team/ariel_chipman_2026.jpg`).
+- **Sequential GitHub Upload Pipeline**:
+  - When clicking **"Publish to GitHub"**, `publishToGitHub()` checks for queued images and uploads each binary file directly to GitHub via `PUT /repos/{owner}/{repo}/contents/images/...` before committing `data.js`.
+  - Displays real-time progress in the save modal (e.g. *"Uploading image 1/2: images/team/photo.jpg..."*).
+  - Automatically fetches file SHA if updating an existing image file to prevent commit collisions.
+- **Local Directory Access Support**:
+  - Added support to write queued binary image files directly into the local `images/` folder when saving via the modern File System Access API.
