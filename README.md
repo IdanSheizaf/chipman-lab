@@ -3,7 +3,6 @@
 Official website and content repository for **The Evo-Devo Lab** (Prof. Ariel Chipman) at **The Hebrew University of Jerusalem**.
 
 * **Live Website**: [https://idansheizaf.github.io/chipman-lab/](https://idansheizaf.github.io/chipman-lab/)
-* **Admin / Content Management**: [https://idansheizaf.github.io/chipman-lab/admin.html](https://idansheizaf.github.io/chipman-lab/admin.html)
 
 ---
 
