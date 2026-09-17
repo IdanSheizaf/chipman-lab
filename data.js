@@ -184,7 +184,7 @@ window.LAB_DATA = {
         "email": "idan.sheizaf@mail.huji.ac.il",
         "socials": {
           "twitter": "https://twitter.com/idansheizaf",
-          "linkedin": "https://linkedin.com/idan.sheizaf",
+          "linkedin": "https://linkedin.com/in/idansheizaf",
           "orcid": "https://orcid.org/0009-0005-4261-3184",
           "scholar": "https://scholar.google.com/citations?user=PCa_tyYAAAAJ&hl"
         }
