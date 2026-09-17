@@ -180,7 +180,7 @@ window.LAB_DATA = {
         "name": "Idan Sheizaf",
         "role": "PhD Student",
         "photo": "./images/team/idan_sheizaf.webp",
-        "bio": "My main topic of research and interest is the terrestrialization of isopods and how that event affected the moulting of isopods, how gene regulatory networks changed due to their terrestrialization and how morphological features of isopods changed because of terrestrialization (e.g. brood-pouch, water-conducting system). I am also interested in the stem cell lineage of segments in our model organism Oncopeltus fasciatus and the developmental potential those cells possess.",
+        "bio": "I am a PhD candidate investigating the evolutionary developmental biology, comparative genomics, and behavioral ecology of isopods (Order Isopoda). My doctoral research centers on isopod terrestrialization and adaptation across marine, terrestrial, and subterranean environments. Through a comparative phylotranscriptomic project across 31 isopod species, I explore the genomic architecture of land invasion and troglomorphism, uncovering how gene family dosage amplification under sequence stasis enabled terrestrial physiology, while regressive gene loss shaped subterranean lineages. In parallel, I study the molecular orchestration of the biphasic moult cycle and its intramoult transcriptomic chimera, alongside light-induced collective behavior in Armadillo sordidus and the phylogenomics of subterranean cave species.",
         "email": "idan.sheizaf@mail.huji.ac.il",
         "socials": {
           "twitter": "https://twitter.com/idansheizaf",
