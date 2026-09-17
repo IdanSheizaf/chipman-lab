@@ -189,7 +189,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <h4 class="font-bold text-slate-900 text-base">Current Lab Members (<span id="admin-member-count">0</span>)</h4>
-                <p class="text-xs text-slate-500">Add, edit, or remove lab members and their social links</p>
+                <p class="text-xs text-slate-500">Add, edit, reorder, or move members to Recent Alumni</p>
               </div>
               <button onclick="openAddMemberModal()" class="px-3.5 py-1.5 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
@@ -201,10 +201,30 @@
             </div>
           </div>
 
-          <!-- Alumni List -->
-          <div class="space-y-4 pt-4">
+          <!-- Recent Alumni List -->
+          <div class="space-y-4 pt-4 border-t border-slate-200">
             <div class="flex items-center justify-between">
-              <h4 class="font-bold text-slate-900 text-base">Alumni Directory</h4>
+              <div>
+                <h4 class="font-bold text-slate-900 text-base">Recent Alumni (<span id="admin-recent-alumni-count">0</span>)</h4>
+                <p class="text-xs text-slate-500">Past members with thumbnail photos, degrees/roles, and profile links</p>
+              </div>
+              <button onclick="openAddRecentAlumModal()" class="px-3.5 py-1.5 bg-chipman-orange hover:bg-chipman-darkorange text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Recent Alum</span>
+              </button>
+            </div>
+            <div id="admin-recent-alumni-list" class="divide-y divide-slate-200 border border-slate-200 rounded-2xl bg-white overflow-hidden">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Alumni List -->
+          <div class="space-y-4 pt-4 border-t border-slate-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-bold text-slate-900 text-base">Alumni</h4>
+                <p class="text-xs text-slate-500">Name & degree directory listing</p>
+              </div>
               <button onclick="openAddAlumModal()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Add Alum</span>
@@ -1069,16 +1089,20 @@
       // Current members
       document.getElementById('admin-member-count').innerText = siteData.team.current.length;
       document.getElementById('admin-members-list').innerHTML = siteData.team.current.map((m, idx) => `
-        <div class="p-4 flex items-center justify-between gap-4">
+        <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <img loading="lazy" decoding="async" src="${m.photo || './images/team/placeholder_member.png'}" class="w-12 h-12 rounded-lg object-cover border border-slate-200">
+            <img loading="lazy" decoding="async" src="${m.photo || './images/team/placeholder_member.png'}" class="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0">
             <div>
               <p class="font-bold text-slate-900 text-sm">${m.name}</p>
               <p class="text-xs text-chipman-orange font-semibold">${m.role}</p>
               ${m.socials && Object.values(m.socials).some(Boolean) ? `<span class="text-[10px] text-emerald-600 font-semibold">● Has custom social links</span>` : ''}
             </div>
           </div>
-          <div class="flex items-center gap-1.5">
+          <div class="flex flex-wrap items-center gap-1.5 self-end sm:self-auto">
+            <button onclick="transitionMemberToAlumni(${idx})" class="px-2.5 py-1 text-xs bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg font-semibold flex items-center gap-1 transition" title="Move this member to Recent Alumni">
+              <i data-lucide="user-minus" class="w-3 h-3"></i>
+              <span>→ Move to Alumni</span>
+            </button>
             <button onclick="moveMember(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Up">↑</button>
             <button onclick="moveMember(${idx}, 1)" ${idx === siteData.team.current.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Down">↓</button>
             <button onclick="editMember(${idx})" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">Edit</button>
@@ -1086,6 +1110,44 @@
           </div>
         </div>
       `).join('');
+
+      // Recent Alumni
+      if (!siteData.team.recentAlumni) siteData.team.recentAlumni = [];
+      const raCountEl = document.getElementById('admin-recent-alumni-count');
+      if (raCountEl) raCountEl.innerText = siteData.team.recentAlumni.length;
+      const raListEl = document.getElementById('admin-recent-alumni-list');
+      if (raListEl) {
+        if (siteData.team.recentAlumni.length === 0) {
+          raListEl.innerHTML = `
+            <div class="p-6 text-center text-slate-400 text-xs bg-slate-50">
+              No recent alumni added yet. You can click <strong>"→ Move to Alumni"</strong> on any active member above, or click <strong>"Add Recent Alum"</strong>.
+            </div>
+          `;
+        } else {
+          raListEl.innerHTML = siteData.team.recentAlumni.map((alum, idx) => `
+            <div class="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <img loading="lazy" decoding="async" src="${alum.photo || './images/team/placeholder_member.png'}" class="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0">
+                <div>
+                  <p class="font-bold text-slate-900 text-sm leading-tight">${alum.name}</p>
+                  <p class="text-xs text-chipman-orange font-semibold">${alum.role || alum.degree || 'Former Member'}</p>
+                  ${alum.degree && alum.role && alum.degree !== alum.role ? `<p class="text-[11px] text-slate-500">${alum.degree}</p>` : ''}
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-1.5 self-end sm:self-auto">
+                <button onclick="moveAlumBackToActive(${idx})" class="px-2.5 py-1 text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg font-semibold flex items-center gap-1 transition" title="Move back to Current Active Members">
+                  <i data-lucide="user-check" class="w-3 h-3"></i>
+                  <span>← Move to Active</span>
+                </button>
+                <button onclick="moveRecentAlum(${idx}, -1)" ${idx === 0 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Up">↑</button>
+                <button onclick="moveRecentAlum(${idx}, 1)" ${idx === siteData.team.recentAlumni.length - 1 ? 'disabled class="px-2 py-1 text-xs bg-slate-100 text-slate-300 rounded cursor-not-allowed"' : 'class="px-2 py-1 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded transition font-bold"'} title="Move Down">↓</button>
+                <button onclick="editRecentAlum(${idx})" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded text-slate-700 font-medium">Edit</button>
+                <button onclick="deleteRecentAlum(${idx})" class="px-2.5 py-1 text-xs bg-red-50 hover:bg-red-100 text-red-600 rounded font-medium">Delete</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
 
       // Alumni
       document.getElementById('admin-alumni-list').innerHTML = siteData.team.alumni.map((a, idx) => `
@@ -1420,6 +1482,249 @@
       const temp = siteData.team.current[idx];
       siteData.team.current[idx] = siteData.team.current[targetIdx];
       siteData.team.current[targetIdx] = temp;
+      renderAll();
+    }
+
+    // ================= RECENT ALUMNI TRANSITION & CRUD =================
+    function transitionMemberToAlumni(idx) {
+      if (!siteData.team || !siteData.team.current || !siteData.team.current[idx]) return;
+      const m = siteData.team.current[idx];
+      if (!siteData.team.recentAlumni) siteData.team.recentAlumni = [];
+
+      openSubModal(`Move ${m.name} to Recent Alumni`, `
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 leading-relaxed mb-3">
+          This will move <strong>${m.name}</strong> from <strong>Current Lab Members</strong> to <strong>Recent Alumni</strong> with their photo and social links intact. You can adjust their former role or degree/graduation year below.
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+          <input type="text" id="tra-name" value="${(m.name || '').replace(/"/g, '&quot;')}" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Former Lab Role</label>
+            <input type="text" id="tra-role" value="${(m.role || '').replace(/"/g, '&quot;')}" placeholder="e.g. Post-Doctoral Fellow or PhD Student" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Degree & Year / Current Position</label>
+            <input type="text" id="tra-degree" placeholder="e.g. Ph.D. 2024 (Now Postdoc at Harvard)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Thumbnail Photo</label>
+          <div class="flex items-center gap-3">
+            <img id="tra-preview" src="${m.photo || './images/team/placeholder_member.png'}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="tra-photo" value="${m.photo || ''}" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'tra-photo', 'tra-preview', 'team')">
+              </label>
+            </div>
+          </div>
+        </div>
+      `, () => {
+        const name = document.getElementById('tra-name').value.trim();
+        const role = document.getElementById('tra-role').value.trim();
+        const degree = document.getElementById('tra-degree').value.trim();
+        const photo = document.getElementById('tra-photo').value.trim();
+
+        const alumData = {
+          name: name || m.name,
+          role: role || m.role,
+          degree: degree,
+          photo: photo || m.photo || './images/team/placeholder_member.png',
+          socials: JSON.parse(JSON.stringify(m.socials || {}))
+        };
+
+        // Remove from current and add to recentAlumni
+        siteData.team.current.splice(idx, 1);
+        siteData.team.recentAlumni.unshift(alumData);
+
+        renderAll();
+      });
+    }
+
+    function moveAlumBackToActive(idx) {
+      if (!siteData.team || !siteData.team.recentAlumni || !siteData.team.recentAlumni[idx]) return;
+      const alum = siteData.team.recentAlumni[idx];
+      if (confirm(`Move ${alum.name} back to Current Lab Members?`)) {
+        const memberData = {
+          name: alum.name,
+          role: alum.role || 'Researcher',
+          photo: alum.photo || './images/team/placeholder_member.png',
+          email: '',
+          bio: '',
+          socials: JSON.parse(JSON.stringify(alum.socials || {}))
+        };
+        siteData.team.recentAlumni.splice(idx, 1);
+        siteData.team.current.push(memberData);
+        renderAll();
+      }
+    }
+
+    function openAddRecentAlumModal() {
+      if (!siteData.team.recentAlumni) siteData.team.recentAlumni = [];
+      openSubModal('Add Recent Alum', `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+          <input type="text" id="ra-name" required placeholder="e.g. Dr. Jane Doe" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Former Lab Role</label>
+            <input type="text" id="ra-role" placeholder="e.g. Post-Doctoral Fellow or PhD Student" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Degree & Year / Current Affiliation</label>
+            <input type="text" id="ra-degree" placeholder="e.g. Ph.D. 2023 or Researcher at..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Thumbnail Photo</label>
+          <div class="flex items-center gap-3">
+            <img id="ra-preview" src="./images/team/placeholder_member.png" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="ra-photo" placeholder="./images/team/... or choose local file" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'ra-photo', 'ra-preview', 'team')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-slate-200 pt-3 space-y-2">
+          <p class="text-xs font-bold text-slate-700">Social & Academic Links (Optional)</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">Google Scholar URL</label>
+              <input type="url" id="ra-scholar" placeholder="https://scholar.google.com/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">LinkedIn URL</label>
+              <input type="url" id="ra-linkedin" placeholder="https://linkedin.com/in/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">ResearchGate URL</label>
+              <input type="url" id="ra-researchgate" placeholder="https://www.researchgate.net/profile/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">ORCID URL</label>
+              <input type="url" id="ra-orcid" placeholder="https://orcid.org/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+          </div>
+        </div>
+      `, () => {
+        const name = document.getElementById('ra-name').value.trim();
+        const role = document.getElementById('ra-role').value.trim();
+        const degree = document.getElementById('ra-degree').value.trim();
+        const photo = document.getElementById('ra-photo').value.trim() || './images/team/placeholder_member.png';
+        const scholar = document.getElementById('ra-scholar').value.trim();
+        const linkedin = document.getElementById('ra-linkedin').value.trim();
+        const researchgate = document.getElementById('ra-researchgate').value.trim();
+        const orcid = document.getElementById('ra-orcid').value.trim();
+
+        const socials = {};
+        if (scholar) socials.scholar = scholar;
+        if (linkedin) socials.linkedin = linkedin;
+        if (researchgate) socials.researchgate = researchgate;
+        if (orcid) socials.orcid = orcid;
+
+        if (name) {
+          siteData.team.recentAlumni.push({ name, role, degree, photo, socials });
+        }
+      });
+    }
+
+    function editRecentAlum(idx) {
+      if (!siteData.team || !siteData.team.recentAlumni || !siteData.team.recentAlumni[idx]) return;
+      const alum = siteData.team.recentAlumni[idx];
+      const soc = alum.socials || {};
+
+      openSubModal(`Edit Recent Alum: ${alum.name}`, `
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+          <input type="text" id="ra-name" value="${(alum.name || '').replace(/"/g, '&quot;')}" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Former Lab Role</label>
+            <input type="text" id="ra-role" value="${(alum.role || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Degree & Year / Current Position</label>
+            <input type="text" id="ra-degree" value="${(alum.degree || '').replace(/"/g, '&quot;')}" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Thumbnail Photo</label>
+          <div class="flex items-center gap-3">
+            <img id="ra-preview" src="${alum.photo || './images/team/placeholder_member.png'}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0">
+            <div class="flex-1 space-y-1.5">
+              <input type="text" id="ra-photo" value="${alum.photo || ''}" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg">
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold border border-slate-300 transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Browse Picture...</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileSelect(event, 'ra-photo', 'ra-preview', 'team')">
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-slate-200 pt-3 space-y-2">
+          <p class="text-xs font-bold text-slate-700">Social & Academic Links</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">Google Scholar URL</label>
+              <input type="url" id="ra-scholar" value="${soc.scholar || ''}" placeholder="https://scholar.google.com/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">LinkedIn URL</label>
+              <input type="url" id="ra-linkedin" value="${soc.linkedin || ''}" placeholder="https://linkedin.com/in/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">ResearchGate URL</label>
+              <input type="url" id="ra-researchgate" value="${soc.researchgate || ''}" placeholder="https://www.researchgate.net/profile/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-0.5">ORCID URL</label>
+              <input type="url" id="ra-orcid" value="${soc.orcid || ''}" placeholder="https://orcid.org/..." class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg">
+            </div>
+          </div>
+        </div>
+      `, () => {
+        alum.name = document.getElementById('ra-name').value.trim();
+        alum.role = document.getElementById('ra-role').value.trim();
+        alum.degree = document.getElementById('ra-degree').value.trim();
+        alum.photo = document.getElementById('ra-photo').value.trim();
+
+        const scholar = document.getElementById('ra-scholar').value.trim();
+        const linkedin = document.getElementById('ra-linkedin').value.trim();
+        const researchgate = document.getElementById('ra-researchgate').value.trim();
+        const orcid = document.getElementById('ra-orcid').value.trim();
+
+        alum.socials = {};
+        if (scholar) alum.socials.scholar = scholar;
+        if (linkedin) alum.socials.linkedin = linkedin;
+        if (researchgate) alum.socials.researchgate = researchgate;
+        if (orcid) alum.socials.orcid = orcid;
+      });
+    }
+
+    function deleteRecentAlum(idx) {
+      if (confirm(`Remove ${siteData.team.recentAlumni[idx].name} from Recent Alumni?`)) {
+        siteData.team.recentAlumni.splice(idx, 1);
+        renderAll();
+      }
+    }
+
+    function moveRecentAlum(idx, direction) {
+      if (!siteData.team || !siteData.team.recentAlumni) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= siteData.team.recentAlumni.length) return;
+      const temp = siteData.team.recentAlumni[idx];
+      siteData.team.recentAlumni[idx] = siteData.team.recentAlumni[targetIdx];
+      siteData.team.recentAlumni[targetIdx] = temp;
       renderAll();
     }
 

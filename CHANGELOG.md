@@ -178,3 +178,19 @@ Added intuitive reordering controls across every multi-entry section of the site
   - Automatically fetches file SHA if updating an existing image file to prevent commit collisions.
 - **Local Directory Access Support**:
   - Added support to write queued binary image files directly into the local `images/` folder when saving via the modern File System Access API.
+
+---
+
+### 16. Recent Alumni Subsection & Project Documentation Streamlining
+- **Recent Alumni Subsection on Public Site (`index.html`)**:
+  - Added a dedicated **Recent Alumni** subsection under the Group page displaying compact, polished cards for former researchers, postdocs, and graduate students.
+  - Included thumbnail photos, former lab roles, degrees, and academic/social profiles (Google Scholar, LinkedIn, ResearchGate, ORCID, Twitter/X).
+- **Recent Alumni Management Panel in CMS (`admin.html`)**:
+  - Built a comprehensive Recent Alumni management interface under the **Lab Members** tab.
+  - Added 1-click **"→ Move to Alumni"** transition buttons on active member cards to seamlessly migrate members to alumni while preserving their photo, role, and social links.
+  - Added **"← Move to Active"** buttons to return alumni back to the active team roster.
+  - Added full modal CRUD controls (Add, Edit, Delete) and reorder buttons (`↑` / `↓`).
+- **Lab Roster Updates (`data.js`)**:
+  - Transferred 4 former lab members to `recentAlumni` (Dr. Judy R. Wexler, Asya Novikov, Dr. Olga Volovych, and Oren Lev).
+- **Official Lab Project README (`README.md`)**:
+  - Overhauled `README.md` into an official academic project description, removing website creation tutorials, setup walkthroughs, and deployment guides.

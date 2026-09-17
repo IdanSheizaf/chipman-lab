@@ -1,61 +1,39 @@
-# The Evo Devo Lab Website
+# The Evo-Devo Lab Website
 
-Official website for **The Evo Devo Lab** (Prof. Ariel Chipman), Department of Ecology, Evolution and Behavior, The Alexander Silberman Institute of Life Sciences, The Hebrew University of Jerusalem.
+Official website and content repository for **The Evo-Devo Lab** (Prof. Ariel Chipman) at **The Hebrew University of Jerusalem**.
 
-Built with modern **HTML5, Tailwind CSS, Lucide Icons, and Vanilla JavaScript** — with **zero dependencies to install**, **no heavy `node_modules`**, and **100% free hosting compatibility** with GitHub Pages, Netlify, and Vercel.
-
----
-
-## 🚀 How to View the Website (Instant Local Preview)
-
-You can launch and view the website in two simple ways:
-
-### Method 1: Double-Click (Windows)
-Just double-click the file **`run_site.bat`** in this folder! It will automatically start a local server and open `http://localhost:8000` in your default browser.
-
-### Method 2: From Terminal / PowerShell
-```bash
-python -m http.server 8000
-```
-Then visit [http://localhost:8000](http://localhost:8000) in your browser.
-
-*(You can also double-click `index.html` directly in Chrome or Edge!)*
+* **Live Website**: [https://idansheizaf.github.io/chipman-lab/](https://idansheizaf.github.io/chipman-lab/)
+* **Admin / Content Management**: [https://idansheizaf.github.io/chipman-lab/admin.html](https://idansheizaf.github.io/chipman-lab/admin.html)
 
 ---
 
-## 📝 How to Update Lab Data (No Coding Required)
+## About the Lab
 
-All site data is neatly organized in **`data.js`** (which can also be edited visually using **`admin.html`**):
+The **Chipman Evo-Devo Lab** investigates the evolution of the arthropod body plan and the origins of arthropod diversity. Research in the lab integrates:
+- **Evolutionary Developmental Biology (Evo-Devo)** of the arthropod body plan (segmentation, tagmosis, and developmental genetics).
+- **Integrative Conceptual Modeling** of morphological evolution and evolutionary transitions.
+- **Comparative Functional Genomics** and transcriptomics across diverse arthropod lineages.
 
-| Data File / Section | What You Can Edit |
-| :--- | :--- |
-| **`labInfo`** | Lab name, PI title, campus address, email, phone, Google Scholar, ORCID, and ResearchGate links |
-| **`research`** | Research themes, full project descriptions, key biological questions, and model organisms |
-| **`team`** | PI bio, active lab members (Postdocs, PhDs, MScs, Lab Manager), projects, emails, and Alumni list |
-| **`publications`** | Articles with title, authors, journal, year, DOI link, and research topic tags |
-| **`news`** | "What's Happening" timeline items (papers accepted, grants awarded, conference talks) |
-| **`gallery`** | Microscopy images, embryo staining, SEM micrographs, captions, and categories |
-
-To update any text or add a paper, simply open **`data.js`** in any text editor (like VS Code or Notepad), edit the text, and refresh your browser!
+**Affiliation:**  
+Department of Ecology, Evolution and Behavior (EEB)  
+The Alexander Silberman Institute of Life Sciences  
+Faculty of Science, The Hebrew University of Jerusalem  
+Edmond J. Safra Campus, Givat Ram, Jerusalem, Israel  
 
 ---
 
-## 🌐 100% Free Hosting Deployment
+## About This Project
 
-Because this site is a clean, static web application, you can host it for **$0/month forever** with zero maintenance:
+This project contains the complete web application, visual content management system (CMS), media assets, and research records for the lab.
 
-### Option A: GitHub Pages (Recommended for Academic Labs)
-1. Initialize Git in this directory (or create a repo on GitHub):
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial lab website"
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-   git push -u origin main
-   ```
-2. On GitHub, go to **Settings** → **Pages** → Source: **Deploy from a branch** (`main` / `root`).
-3. Your site is instantly live at `https://YOUR_USERNAME.github.io/YOUR_REPO/`!
-4. You can also connect a custom domain (e.g. `evodevolab.org` or `chipmanlab.huji.ac.il`) for free under **Custom domain**.
+* **Public Website**: [`index.html`](index.html)
+* **Lab Data & Records Store**: [`data.js`](data.js)
+* **CMS Content Editor**: [`admin.html`](admin.html)
 
-### Option B: Netlify / Vercel
-Simply drag and drop this folder onto [Netlify Drop](https://app.netlify.com/drop) or import from GitHub.
+---
+
+## Contact & Credits
+
+* **Principal Investigator**: Prof. Ariel Chipman ([Ariel.Chipman@mail.huji.ac.il](mailto:Ariel.Chipman@mail.huji.ac.il))
+* **Website Developer & Maintainer**: Idan Sheizaf ([idan.sheizaf@mail.huji.ac.il](mailto:idan.sheizaf@mail.huji.ac.il))
+* **Copyright**: © 2026 by the Evo-Devo Lab. All rights reserved.
